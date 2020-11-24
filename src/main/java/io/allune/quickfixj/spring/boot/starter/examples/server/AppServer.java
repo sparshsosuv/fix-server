@@ -1,33 +1,18 @@
 package io.allune.quickfixj.spring.boot.starter.examples.server;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
+import io.allune.quickfixj.spring.boot.starter.EnableQuickFixJServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import io.allune.quickfixj.spring.boot.starter.EnableQuickFixJServer;
-import quickfix.Acceptor;
-import quickfix.Application;
-import quickfix.ConfigError;
-import quickfix.LogFactory;
-import quickfix.Message;
-import quickfix.MessageFactory;
-import quickfix.MessageStoreFactory;
-import quickfix.Session;
-import quickfix.SessionNotFound;
-import quickfix.SessionSettings;
-import quickfix.ThreadedSocketAcceptor;
-import quickfix.field.ClOrdID;
+import quickfix.*;
 import quickfix.field.SecurityID;
-import quickfix.field.Side;
 import quickfix.fix44.ExecutionReport;
-import quickfix.fix44.OrderStatusRequest;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 @EnableQuickFixJServer
 @SpringBootApplication
@@ -61,17 +46,6 @@ public class AppServer implements CommandLineRunner {
 
         Session.sendToTarget( message, "EXEC", "BANZAI");
 
-//		executorService.scheduleAtFixedRate( () -> {
-//            try {
-//
-//                log.info("SENDING ORDER FROM SERVER TO CLIENT");
-//
-
-//            } catch (SessionNotFound e) {
-//                e.printStackTrace();
-//            }
-//
-//        }, 5000, 5000, TimeUnit.MILLISECONDS);
     }
 
     @Bean

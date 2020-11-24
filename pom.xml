@@ -12,7 +12,7 @@
         <version>2.3.2.RELEASE</version>
     </parent>
 
-    <name>QuickFixJ Spring Boot Starter Examples :: Simple Server</name>
+    <name>QuickFixJ Simple Server</name>
     <description>QuickFixJ Spring Boot Starter Server Example</description>
 
     <properties>
@@ -20,6 +20,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <quickfixj-spring-boot-starter.version>2.7.1</quickfixj-spring-boot-starter.version>
+        <oi.github.openfeign.version>10.10.1</oi.github.openfeign.version>
 
     </properties>
 
@@ -29,23 +30,34 @@
             <artifactId>quickfixj-spring-boot-starter</artifactId>
             <version>${quickfixj-spring-boot-starter.version}</version>
         </dependency>
-
         <dependency>
             <groupId>io.allune</groupId>
             <artifactId>quickfixj-spring-boot-actuator</artifactId>
             <version>${quickfixj-spring-boot-starter.version}</version>
-
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-okhttp</artifactId>
+            <version>${oi.github.openfeign.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-gson</artifactId>
+            <version>${oi.github.openfeign.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-slf4j</artifactId>
+            <version>${oi.github.openfeign.version}</version>
         </dependency>
     </dependencies>
 
