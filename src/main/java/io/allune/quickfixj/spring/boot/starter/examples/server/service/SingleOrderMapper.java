@@ -13,12 +13,10 @@ public interface SingleOrderMapper {
     @Mappings({ @Mapping(source = "price.value", target = "price"),
             @Mapping(source = "orderQty.value", target = "quantity"),
             @Mapping(source = "symbol.value", target = "ticker"),
-            @Mapping(source = "securityID.value", target = "exchangeCode"),
+            @Mapping(source = "securityExchange.value", target = "exchangeCode"),
             @Mapping(source = "transactTime.value", target = "operationDate"),
             @Mapping(source = "clOrdID.value", target = "orderId"),
-
-
-//            @Mapping(target = "brokerName", expression = "java(item.getField(new quickfix.field.SenderCompID()).getValue())"),
+            @Mapping(target = "brokerName", expression = "java(item.getHeader().getString(quickfix.field.SenderCompID.FIELD))"),
             @Mapping(target = "operation", expression = "java(Character.getNumericValue(item.getSide().getValue()))")})
     OrderRepresentation messageToOrder(NewOrderSingle item) throws FieldNotFound;
 

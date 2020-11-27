@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import quickfix.*;
+import quickfix.field.SecurityExchange;
+import quickfix.field.SecurityID;
+import quickfix.field.SenderCompID;
 
 @Component
 public class ServerApplicationAdapter extends MessageCracker implements Application {
@@ -29,6 +32,7 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
     public void fromApp(Message message, SessionID sessionId)
             throws FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType {
 
+        message.getHeader().getString(SenderCompID.FIELD);
         crack(message, sessionId);
 
     }
@@ -37,7 +41,6 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
     public void newOrderHandler(quickfix.fix44.NewOrderSingle message, SessionID sessionID) throws FieldNotFound {
 
         OrderRepresentation order = mapper.messageToOrder(message);
-        order.setBrokerName("BrokerNameFixed");
         service.createOrder(order);
     }
 
