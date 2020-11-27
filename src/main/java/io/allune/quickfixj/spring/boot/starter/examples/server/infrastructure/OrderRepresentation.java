@@ -60,9 +60,9 @@ public class OrderRepresentation implements Serializable {
         return operation;
     }
 
-    public void setOperation(Character operation) {
+    public void setOperation(Integer operation) {
 
-        this.operation = Operation.valueOf(new Integer(operation));
+        this.operation = Operation.valueOf( operation);
     }
 
     public String getOperationDate() {
