@@ -21,6 +21,7 @@
         <java.version>1.8</java.version>
         <quickfixj-spring-boot-starter.version>2.7.1</quickfixj-spring-boot-starter.version>
         <oi.github.openfeign.version>10.10.1</oi.github.openfeign.version>
+        <org.mapstruct.version>1.4.1.Final</org.mapstruct.version>
 
     </properties>
 
@@ -29,6 +30,11 @@
             <groupId>io.allune</groupId>
             <artifactId>quickfixj-spring-boot-starter</artifactId>
             <version>${quickfixj-spring-boot-starter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
         </dependency>
         <dependency>
             <groupId>io.allune</groupId>
@@ -67,6 +73,30 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source> <!-- depending on your project -->
+                    <target>1.8</target> <!-- depending on your project -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
+                        <!-- other annotation processors -->
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
         </plugins>
     </build>

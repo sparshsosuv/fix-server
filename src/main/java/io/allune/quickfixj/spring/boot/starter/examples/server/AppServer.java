@@ -18,7 +18,7 @@ import java.util.concurrent.ScheduledExecutorService;
 @SpringBootApplication
 public class AppServer implements CommandLineRunner {
 
-	
+
     private static final Logger log = LoggerFactory.getLogger(AppServer.class);
 
     public static void main(String[] args) {
@@ -29,22 +29,22 @@ public class AppServer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         log.info("Joining thread, you can press Ctrl+C to shutdown application");
         //Thread.currentThread().join();
-        
-        
+
+
         final ScheduledExecutorService executorService = Executors
-        		  .newSingleThreadScheduledExecutor();
+                .newSingleThreadScheduledExecutor();
 
         //final Message ioi = new OrderStatusRequest(new ClOrdID("456"), new Side(Side.BUY));
 
         ExecutionReport message = new ExecutionReport();
 
 
-        message.setField( new SecurityID( "COMB SL" ) );
-        message.setString( 55 , "ZEROFLOWS");
+        message.setField(new SecurityID("COMB SL"));
+        message.setString(55, "ZEROFLOWS");
         //55
         //ioi.setString( 8002 , "CONDITIONAL ORDER");
 
-        Session.sendToTarget( message, "EXEC", "BANZAI");
+        Session.sendToTarget(message, "SERVER", "CLIENT");
 
     }
 

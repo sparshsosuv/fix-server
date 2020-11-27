@@ -2,11 +2,15 @@ package io.allune.quickfixj.spring.boot.starter.examples.server.infrastructure;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 public class OrderRepresentation implements Serializable {
 
     private static final long serialVersionUID = 8124875229029382991L;
+
+    static DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
     private String orderId;
 
@@ -22,7 +26,7 @@ public class OrderRepresentation implements Serializable {
 
     private String exchangeCode;
 
-    private String operationDate;
+    private LocalDateTime operationDate;
 
     private String mainType;
 
@@ -56,8 +60,16 @@ public class OrderRepresentation implements Serializable {
         return operation;
     }
 
-    public void setOperation(Operation operation) {
-        this.operation = operation;
+    public void setOperation(Character operation) {
+
+        this.operation = Operation.valueOf(new Integer(operation));
+    }
+
+    public String getOperationDate() {
+        if(operationDate == null) {
+            return null;
+        }
+        return formatter.format(operationDate);
     }
 
     public String getTicker() {
@@ -84,11 +96,8 @@ public class OrderRepresentation implements Serializable {
         this.price = price;
     }
 
-    public String getOperationDate() {
-        return operationDate;
-    }
 
-    public void setOperationDate(String operationDate) {
+    public void setOperationDate(LocalDateTime operationDate) {
         this.operationDate = operationDate;
     }
 
