@@ -1,6 +1,8 @@
 package io.allune.quickfixj.spring.boot.starter.examples.server;
 
 import io.allune.quickfixj.spring.boot.starter.examples.server.infrastructure.OrderRepresentation;
+import io.allune.quickfixj.spring.boot.starter.examples.server.service.ExecutionReportRepresentation;
+import io.allune.quickfixj.spring.boot.starter.examples.server.service.ExecutionReportService;
 import io.allune.quickfixj.spring.boot.starter.examples.server.service.OrderService;
 import io.allune.quickfixj.spring.boot.starter.examples.server.service.SingleOrderMapper;
 import org.slf4j.Logger;
@@ -42,6 +44,7 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
 
         OrderRepresentation order = mapper.messageToOrder(message);
         service.createOrder(order);
+        ExecutionReportService.send(new ExecutionReportRepresentation(), message);
     }
 
     @Override
