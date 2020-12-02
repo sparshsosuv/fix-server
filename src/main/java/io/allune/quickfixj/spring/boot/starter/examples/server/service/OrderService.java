@@ -18,7 +18,7 @@ public class OrderService {
 
     //TODO refactoring
     public void createOrder(OrderRepresentation order) {
-        UserRepresentation rep = flowlinxApiClient.auth("ado", "asd");
+        UserRepresentation rep = flowlinxApiClient.auth("globalbank1", "ffrrwl2020");
         flowlinxApiClient.send(order, rep.getToken());
 
     }

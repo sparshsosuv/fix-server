@@ -16,7 +16,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 @EnableQuickFixJServer
 @SpringBootApplication
-public class AppServer implements CommandLineRunner {
+public class AppServer {
 
 
     private static final Logger log = LoggerFactory.getLogger(AppServer.class);
@@ -25,28 +25,20 @@ public class AppServer implements CommandLineRunner {
         SpringApplication.run(AppServer.class, args);
     }
 
-    @Override
-    public void run(String... args) throws Exception {
-        log.info("Joining thread, you can press Ctrl+C to shutdown application");
-        //Thread.currentThread().join();
-
-
-        final ScheduledExecutorService executorService = Executors
-                .newSingleThreadScheduledExecutor();
-
-        //final Message ioi = new OrderStatusRequest(new ClOrdID("456"), new Side(Side.BUY));
-
-        ExecutionReport message = new ExecutionReport();
-
-
-        message.setField(new SecurityID("COMB SL"));
-        message.setString(55, "ZEROFLOWS");
-        //55
-        //ioi.setString( 8002 , "CONDITIONAL ORDER");
-
-        Session.sendToTarget(message, "SERVER", "CLIENT");
-
-    }
+//    @Override
+//    public void run(String... args) throws Exception {
+//        log.info("Joining thread, you can press Ctrl+C to shutdown application");
+//        //Thread.currentThread().join();
+//
+//https://www.youtube.com/watch?v=wSD85X5AUQA&ab_channel=LittleMissNasty
+//        final ScheduledExecutorService executorService = Executors
+//                .newSingleThreadScheduledExecutor();
+//
+//        //final Message ioi = new OrderStatusRequest(new ClOrdID("456"), new Side(Side.BUY));
+//
+//
+//
+//    }
 
     @Bean
     public Application serverApplication() {
