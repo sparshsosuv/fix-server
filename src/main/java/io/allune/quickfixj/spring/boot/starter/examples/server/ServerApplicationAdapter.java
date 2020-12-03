@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import quickfix.*;
-import quickfix.field.SecurityExchange;
-import quickfix.field.SecurityID;
 import quickfix.field.SenderCompID;
 
 @Component

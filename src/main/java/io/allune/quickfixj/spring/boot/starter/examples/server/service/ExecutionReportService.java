@@ -11,41 +11,58 @@ import java.time.LocalDateTime;
 
 public class ExecutionReportService {
 
-    public static void send(ExecutionReportRepresentation report, NewOrderSingle order) throws FieldNotFound {
+    public static void send(ExecutionReportRepresentation report, NewOrderSingle order)  {
 
         ExecutionReport message = new ExecutionReport();
 
+        try {
+            ClOrdID clOrdID = order.getClOrdID(); // new ClOrdID(); //11
+            Currency currency = order.getCurrency();// new Currency(); //15
+            OrderID orderID = new OrderID("reportO" + order.getAccount()); //37
+            Price price = order.getPrice(); //44
+            ExecID execID = new ExecID("report" + order.getAccount()); //17
+            Side side = order.getSide(); // new Side(); //54
+            Symbol symbol = order.getSymbol(); //new Symbol(); //55
+            Text text = order.getText(); //  new Text(); //58
+            SecurityID securityID = order.getSecurityID(); //new SecurityID(); //48
+            TimeInForce timeInForce = order.getTimeInForce(); // new TimeInForce(); //59
+            OrdType ordType = order.getOrdType(); //new OrdType(); //40
+            Account account = order.getAccount(); //new Account(); //01
 
-        order.getAccount();
-        order.getClOrdID();
+            message.setField(orderID);
+            message.setField(price);
+            message.setField(account);
+            message.setField(clOrdID);
+            message.setField(currency);
+            message.setField(execID);
+            message.setField(ordType);
+            message.setField(securityID);
+            message.setField(side);
+            message.setField(symbol);
+            message.setField(text);
+            message.setField(timeInForce);
+            message.set(order.getMinQty());
+
+        } catch (FieldNotFound ex) {
+            System.out.println("field not found exception");
+        }
 
         SenderCompID senderCompID = new SenderCompID(); // 49
         DeliverToSubID id = new DeliverToSubID(); // 129
         DeliverToCompID deliverToCompID = new DeliverToCompID(); // 128
         TargetCompID targetCompID = new TargetCompID(); // 56
         SendingTime sendingTime = new SendingTime(LocalDateTime.now());// new SendingTime(); // 52
-        Account account = order.getAccount(); //new Account(); //01
+
         AvgPx avgPx = new AvgPx(0); //06
-        ClOrdID clOrdID = order.getClOrdID(); // new ClOrdID(); //11
-        CumQty cumQty = new CumQty(); // 14
-        Currency currency = order.getCurrency();// new Currency(); //15
-        ExecID execID = new ExecID(); //17
+        CumQty cumQty = new CumQty(0); // 14
         IDSource idSource = new IDSource(); //22
         LastCapacity lastCapacity = new LastCapacity('1'); //29
-        LastMkt lastMkt = new LastMkt(); //30
+        LastMkt lastMkt = new LastMkt(); //30 //discuss yan
         LastPx lastPx = new LastPx(0); //31
         LastShares lastShares = new LastShares(0); //32
-        OrderID orderID = new OrderID(); //37
-        OrderQty orderQty = new OrderQty(); //38
-        OrdStatus ordStatus = new OrdStatus(); //39
-        OrdType ordType = order.getOrdType(); //new OrdType(); //40
+        OrderQty orderQty = new OrderQty(0); //38
+        OrdStatus ordStatus = new OrdStatus('8'); //39
         OrigClOrdID origClOrdID = new OrigClOrdID(); //41 order.getOrigClOrdID
-        Price price = order.getPrice(); //44
-        SecurityID securityID = order.getSecurityID(); //new SecurityID(); //48
-        Side side = order.getSide(); // new Side(); //54
-        Symbol symbol = order.getSymbol(); //new Symbol(); //55
-        Text text = order.getText(); //  new Text(); //58
-        TimeInForce timeInForce = order.getTimeInForce(); // new TimeInForce(); //59
         TransactTime transactTime = new TransactTime(); //60
         ExecBroker execBroker = new ExecBroker(); //76
         MinQty minQty = new MinQty(); // 110
@@ -55,32 +72,23 @@ public class ExecutionReportService {
         SecurityExchange securityExchange = new SecurityExchange(); //207
 
 
-        message.set(order.getMinQty());
 
-
+        message.setField(senderCompID);
+        message.setField(id);
+        message.setField(deliverToCompID);
+        message.setField(targetCompID);
         message.setField(ordStatus);
-        message.setField(orderID);
-        message.setField(price);
-        message.setField(account);
         message.setField(sendingTime);
         message.setField(avgPx);
-        message.setField(clOrdID);
         message.setField(cumQty);
-        message.setField(currency);
-        message.setField(execID);
         message.setField(idSource);
         message.setField(lastCapacity);
         message.setField(lastMkt);
         message.setField(lastPx);
+
         message.setField(lastShares);
         message.setField(orderQty);
-        message.setField(ordType);
         message.setField(origClOrdID);
-        message.setField(securityID);
-        message.setField(side);
-        message.setField(symbol);
-        message.setField(text);
-        message.setField(timeInForce);
         message.setField(transactTime);
         message.setField(execBroker);
         message.setField(minQty);
