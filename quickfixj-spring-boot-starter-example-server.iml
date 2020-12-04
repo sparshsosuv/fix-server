@@ -49,6 +49,7 @@
     <orderEntry type="library" name="Maven: org.quickfixj:quickfixj-core:2.2.0" level="project" />
     <orderEntry type="library" name="Maven: org.quickfixj:quickfixj-messages-all:2.2.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.mina:mina-core:2.0.19" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.18.16" level="project" />
     <orderEntry type="library" name="Maven: org.mapstruct:mapstruct:1.4.1.Final" level="project" />
     <orderEntry type="library" name="Maven: io.allune:quickfixj-spring-boot-actuator:2.7.1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-actuator:2.3.2.RELEASE" level="project" />

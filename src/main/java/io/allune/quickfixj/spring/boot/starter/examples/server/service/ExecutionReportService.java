@@ -1,5 +1,6 @@
 package io.allune.quickfixj.spring.boot.starter.examples.server.service;
 
+import lombok.extern.log4j.Log4j2;
 import quickfix.FieldNotFound;
 import quickfix.Session;
 import quickfix.SessionNotFound;
@@ -9,43 +10,110 @@ import quickfix.fix44.NewOrderSingle;
 
 import java.time.LocalDateTime;
 
+@Log4j2
 public class ExecutionReportService {
 
-    public static void send(ExecutionReportRepresentation report, NewOrderSingle order)  {
+    public static void send(ExecutionReportRepresentation report, NewOrderSingle order) {
 
         ExecutionReport message = new ExecutionReport();
 
+        //FIXME refactoring
+        ClOrdID clOrdID = null; // new ClOrdID(); //11
         try {
-            ClOrdID clOrdID = order.getClOrdID(); // new ClOrdID(); //11
-            Currency currency = order.getCurrency();// new Currency(); //15
-            OrderID orderID = new OrderID("reportO" + order.getAccount()); //37
-            Price price = order.getPrice(); //44
-            ExecID execID = new ExecID("report" + order.getAccount()); //17
-            Side side = order.getSide(); // new Side(); //54
-            Symbol symbol = order.getSymbol(); //new Symbol(); //55
-            Text text = order.getText(); //  new Text(); //58
-            SecurityID securityID = order.getSecurityID(); //new SecurityID(); //48
-            TimeInForce timeInForce = order.getTimeInForce(); // new TimeInForce(); //59
-            OrdType ordType = order.getOrdType(); //new OrdType(); //40
-            Account account = order.getAccount(); //new Account(); //01
-
-            message.setField(orderID);
-            message.setField(price);
-            message.setField(account);
-            message.setField(clOrdID);
-            message.setField(currency);
-            message.setField(execID);
-            message.setField(ordType);
-            message.setField(securityID);
-            message.setField(side);
-            message.setField(symbol);
-            message.setField(text);
-            message.setField(timeInForce);
-            message.set(order.getMinQty());
-
-        } catch (FieldNotFound ex) {
-            System.out.println("field not found exception");
+            clOrdID = order.getClOrdID();
+        } catch (FieldNotFound fieldNotFound) {
+            log.error("ClOrdID not found", fieldNotFound);
         }
+        Currency currency = null;// new Currency(); //15
+        try {
+            currency = order.getCurrency();
+        } catch (FieldNotFound fieldNotFound) {
+            log.error("currency not found",fieldNotFound);
+        }
+        OrderID orderID = null; //37
+        try {
+            orderID = new OrderID("reportO" + order.getAccount()); //37
+            message.setField(orderID);
+        } catch (FieldNotFound fieldNotFound) {
+            log.error("Account Field for orderId not found",fieldNotFound);
+        }
+
+        Price price = null; //44
+        try {
+            price = order.getPrice();
+        } catch (FieldNotFound fieldNotFound) {
+            log.error("Price Field not found",fieldNotFound);
+        }
+        ExecID execID = null;
+        try{
+            execID = new ExecID("report" + order.getAccount()); //17
+        } catch (FieldNotFound fieldNotFound) {
+            log.error("Account Field for ExecID not found",fieldNotFound);
+        }
+
+        Side side = null; // new Side(); //54
+        try {
+            side = order.getSide();
+        } catch (FieldNotFound fieldNotFound) {
+            log.error("Side Field not found",fieldNotFound);
+        }
+        Symbol symbol = null; //new Symbol(); //55
+        try {
+            symbol = order.getSymbol();
+        } catch (FieldNotFound fieldNotFound) {
+            log.error("Symbol Field not found",fieldNotFound);
+        }
+        Text text = null; //  new Text(); //58
+        try {
+            text = order.getText();
+        } catch (FieldNotFound fieldNotFound) {
+            log.error("Text Field not found",fieldNotFound);
+        }
+        SecurityID securityID = null; //new SecurityID(); //48
+        try {
+            securityID = order.getSecurityID();
+        } catch (FieldNotFound fieldNotFound) {
+            log.error("Security Id Field not found",fieldNotFound);
+        }
+        TimeInForce timeInForce = null; // new TimeInForce(); //59
+        try {
+            timeInForce = order.getTimeInForce();
+        } catch (FieldNotFound fieldNotFound) {
+            log.error("TimeInForce Field not found",fieldNotFound);
+        }
+        OrdType ordType = null; //new OrdType(); //40
+        try {
+            ordType = order.getOrdType();
+        } catch (FieldNotFound fieldNotFound) {
+            log.error("OrdType Field not found",fieldNotFound);
+        }
+        Account account = null; //new Account(); //01
+        try {
+            account = order.getAccount();
+        } catch (FieldNotFound fieldNotFound) {
+            log.error("Account Field not found",fieldNotFound);
+        }
+        MinQty minQty = null;
+        try {
+            minQty =order.getMinQty();
+        } catch (FieldNotFound fieldNotFound) {
+            log.error("MinQty Field not found",fieldNotFound);
+        }
+
+
+        message.setField(price);
+        message.setField(account);
+        message.setField(clOrdID);
+        message.setField(currency);
+        message.setField(execID);
+        message.setField(ordType);
+        message.setField(securityID);
+        message.setField(side);
+        message.setField(symbol);
+        message.setField(text);
+        message.setField(timeInForce);
+        message.setField(minQty);
+
 
         SenderCompID senderCompID = new SenderCompID(); // 49
         DeliverToSubID id = new DeliverToSubID(); // 129
@@ -65,12 +133,10 @@ public class ExecutionReportService {
         OrigClOrdID origClOrdID = new OrigClOrdID(); //41 order.getOrigClOrdID
         TransactTime transactTime = new TransactTime(); //60
         ExecBroker execBroker = new ExecBroker(); //76
-        MinQty minQty = new MinQty(); // 110
         ExpireTime expireTime = new ExpireTime(); // 126
         ExecType execType = new ExecType(); //150
         LeavesQty leavesQty = new LeavesQty(); //151
         SecurityExchange securityExchange = new SecurityExchange(); //207
-
 
 
         message.setField(senderCompID);
@@ -85,7 +151,6 @@ public class ExecutionReportService {
         message.setField(lastCapacity);
         message.setField(lastMkt);
         message.setField(lastPx);
-
         message.setField(lastShares);
         message.setField(orderQty);
         message.setField(origClOrdID);
