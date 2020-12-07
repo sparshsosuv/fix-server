@@ -13,8 +13,9 @@ import java.time.LocalDateTime;
 @Log4j2
 public class ExecutionReportService {
 
-    public static void send(ExecutionReportRepresentation report, NewOrderSingle order) {
+    public static void send(NewOrderSingle order) {
 
+        log.info("m=send , sending order:{}", order);
         ExecutionReport message = new ExecutionReport();
 
         //FIXME refactoring

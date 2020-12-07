@@ -39,10 +39,10 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
 
     @Handler
     public void newOrderHandler(quickfix.fix44.NewOrderSingle message, SessionID sessionID) throws FieldNotFound {
-
+        log.info("newOrderHandler: SessionId={}", sessionID);
         OrderRepresentation order = mapper.messageToOrder(message);
         service.createOrder(order);
-        ExecutionReportService.send(new ExecutionReportRepresentation(), message);
+        ExecutionReportService.send(message);
     }
 
     @Override
