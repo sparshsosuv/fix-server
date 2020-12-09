@@ -1,13 +1,10 @@
-package io.allune.quickfixj.spring.boot.starter.examples.server;
+package com.hes.zf.fix.server;
 
-import io.allune.quickfixj.spring.boot.starter.examples.server.infrastructure.OrderRepresentation;
-import io.allune.quickfixj.spring.boot.starter.examples.server.service.ExecutionReportRepresentation;
-import io.allune.quickfixj.spring.boot.starter.examples.server.service.ExecutionReportService;
-import io.allune.quickfixj.spring.boot.starter.examples.server.service.OrderService;
-import io.allune.quickfixj.spring.boot.starter.examples.server.service.SingleOrderMapper;
+import com.hes.zf.fix.server.events.CreateNewOrderEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import quickfix.*;
 import quickfix.field.SenderCompID;
@@ -16,9 +13,7 @@ import quickfix.field.SenderCompID;
 public class ServerApplicationAdapter extends MessageCracker implements Application {
 
     @Autowired
-    private SingleOrderMapper mapper;
-    @Autowired
-    private OrderService service;
+    private ApplicationEventPublisher publisher;
 
     private static final Logger log = LoggerFactory.getLogger(ServerApplicationAdapter.class);
 
@@ -40,9 +35,8 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
     @Handler
     public void newOrderHandler(quickfix.fix44.NewOrderSingle message, SessionID sessionID) throws FieldNotFound {
         log.info("newOrderHandler: SessionId={}", sessionID);
-        OrderRepresentation order = mapper.messageToOrder(message);
-        service.createOrder(order);
-        ExecutionReportService.send(message);
+        publisher.publishEvent(new CreateNewOrderEvent(this,message));
+
     }
 
     @Override

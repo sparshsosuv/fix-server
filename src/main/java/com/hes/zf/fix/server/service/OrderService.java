@@ -1,9 +1,8 @@
-package io.allune.quickfixj.spring.boot.starter.examples.server.service;
+package com.hes.zf.fix.server.service;
 
-import io.allune.quickfixj.spring.boot.starter.examples.server.ServerApplicationAdapter;
-import io.allune.quickfixj.spring.boot.starter.examples.server.infrastructure.FlowlinxApiClient;
-import io.allune.quickfixj.spring.boot.starter.examples.server.infrastructure.OrderRepresentation;
-import io.allune.quickfixj.spring.boot.starter.examples.server.infrastructure.UserRepresentation;
+import com.hes.zf.fix.server.infrastructure.FlowlinxApiClient;
+import com.hes.zf.fix.server.infrastructure.OrderRepresentation;
+import com.hes.zf.fix.server.infrastructure.UserRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ public class OrderService {
         this.flowlinxApiClient  = flowlinxApiClient;
     }
 
-    //TODO refactoring
     public void createOrder(OrderRepresentation order) {
         log.info("m=createOrder sending order to api, order{}", order);
         UserRepresentation rep = flowlinxApiClient.auth("globalbank1", "ffrrwl2020");

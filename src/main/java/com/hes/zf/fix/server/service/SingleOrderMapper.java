@@ -1,6 +1,6 @@
-package io.allune.quickfixj.spring.boot.starter.examples.server.service;
+package com.hes.zf.fix.server.service;
 
-import io.allune.quickfixj.spring.boot.starter.examples.server.infrastructure.OrderRepresentation;
+import com.hes.zf.fix.server.infrastructure.OrderRepresentation;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

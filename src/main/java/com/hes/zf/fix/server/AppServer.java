@@ -1,18 +1,12 @@
-package io.allune.quickfixj.spring.boot.starter.examples.server;
+package com.hes.zf.fix.server;
 
 import io.allune.quickfixj.spring.boot.starter.EnableQuickFixJServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import quickfix.*;
-import quickfix.field.SecurityID;
-import quickfix.fix44.ExecutionReport;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 @EnableQuickFixJServer
 @SpringBootApplication

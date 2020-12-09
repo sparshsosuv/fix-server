@@ -1,4 +1,4 @@
-package io.allune.quickfixj.spring.boot.starter.examples.server.infrastructure;
+package com.hes.zf.fix.server.infrastructure;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

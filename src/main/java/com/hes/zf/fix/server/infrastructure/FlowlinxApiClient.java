@@ -1,4 +1,4 @@
-package io.allune.quickfixj.spring.boot.starter.examples.server.infrastructure;
+package com.hes.zf.fix.server.infrastructure;
 
 import com.google.gson.Gson;
 import feign.Feign;
