@@ -1,4 +1,4 @@
-package com.hes.zf.fix.server.events;
+package com.hes.zf.fix.server.message.events;
 
 import org.springframework.context.ApplicationEvent;
 import quickfix.fix44.NewOrderSingle;

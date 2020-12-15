@@ -1,6 +1,8 @@
-package com.hes.zf.fix.server.events;
+package com.hes.zf.fix.server.message.handlers;
 
 import com.hes.zf.fix.server.infrastructure.OrderRepresentation;
+import com.hes.zf.fix.server.message.events.CreateNewOrderEvent;
+import com.hes.zf.fix.server.message.events.NewOrderCreatedEvent;
 import com.hes.zf.fix.server.service.OrderService;
 import com.hes.zf.fix.server.service.SingleOrderMapper;
 import org.slf4j.Logger;

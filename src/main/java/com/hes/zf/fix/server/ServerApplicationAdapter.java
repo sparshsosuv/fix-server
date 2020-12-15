@@ -1,6 +1,8 @@
 package com.hes.zf.fix.server;
 
-import com.hes.zf.fix.server.events.CreateNewOrderEvent;
+import com.hes.zf.fix.server.message.events.CreateNewOrderEvent;
+import com.hes.zf.fix.server.message.events.OrderCancelReplaceEvent;
+import com.hes.zf.fix.server.message.events.OrderCancelRequestEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,19 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
     public void newOrderHandler(quickfix.fix44.NewOrderSingle message, SessionID sessionID) throws FieldNotFound {
         log.info("newOrderHandler: SessionId={}", sessionID);
         publisher.publishEvent(new CreateNewOrderEvent(this,message));
+
+    }
+
+    @Handler
+    public void replaceOrder(quickfix.fix44.OrderCancelReplaceRequest message, SessionID sessionID) throws FieldNotFound {
+        publisher.publishEvent(new OrderCancelReplaceEvent(this,message));
+
+    }
+
+    @Handler
+    public void cancelOrder(quickfix.fix44.OrderCancelRequest message, SessionID sessionID) throws FieldNotFound {
+        log.info("cancelOrderHandler: SessionId={}", sessionID);
+        publisher.publishEvent(new OrderCancelRequestEvent(this,message));
 
     }
 

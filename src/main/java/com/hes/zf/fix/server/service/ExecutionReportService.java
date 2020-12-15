@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Log4j2
 public class ExecutionReportService {
 
-    public static void send(NewOrderSingle order) {
+    public static void send(NewOrderSingle order, OrdStatus ordStatus) {
 
         log.info("m=send , sending order:{}", order);
         ExecutionReport message = new ExecutionReport();
@@ -130,7 +130,6 @@ public class ExecutionReportService {
         LastPx lastPx = new LastPx(0); //31
         LastShares lastShares = new LastShares(0); //32
         OrderQty orderQty = new OrderQty(0); //38
-        OrdStatus ordStatus = new OrdStatus('8'); //39
         OrigClOrdID origClOrdID = new OrigClOrdID(); //41 order.getOrigClOrdID
         TransactTime transactTime = new TransactTime(); //60
         ExecBroker execBroker = new ExecBroker(); //76
