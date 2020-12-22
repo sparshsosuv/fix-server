@@ -6,7 +6,7 @@
     <appender name="ROOT_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_LOCATION:-.}/flowlinx-fix-server.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${APP_BASE_DIR:-.}/logs/flowlinx-fix-server-%d{yyyy-MM-dd}.zip</fileNamePattern>
+            <fileNamePattern>${APP_BASE_DIR:-.}/logs/flowlinx-fix-server-%d{yyyy-MM-dd-hh:mm:ss}.zip</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -19,9 +19,12 @@
     <appender name="FIX_MESSAGE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_LOCATION:-.}/flowlinx-fix-server-message.txt</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${APP_BASE_DIR:-.}/logs/flowlinx-fix-server-message-%d{yyyy-MM-dd}.zip</fileNamePattern>
+            <fileNamePattern>${APP_BASE_DIR:-.}/logs/flowlinx-fix-server-message-%d{yyyy-MM-dd-:hh:mm:ss}.zip</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>5MB</maxFileSize>
+        </triggeringPolicy>
         <encoder>
             <charset>UTF-8</charset>
             <immediateFlush>true</immediateFlush>
