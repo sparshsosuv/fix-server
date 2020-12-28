@@ -9,6 +9,6 @@ public class OrderCancelReplaceHandler implements ApplicationListener<OrderCance
 
     @Override
     public void onApplicationEvent(OrderCancelReplaceEvent orderCancelReplaceEvent) {
-        System.out.println(orderCancelReplaceEvent.getMessage());
+        System.out.println("REPLACE MESSAGE= "+orderCancelReplaceEvent.getMessage());
     }
 }

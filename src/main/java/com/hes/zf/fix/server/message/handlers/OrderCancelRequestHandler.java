@@ -9,6 +9,6 @@ public class OrderCancelRequestHandler implements ApplicationListener<OrderCance
 
     @Override
     public void onApplicationEvent(OrderCancelRequestEvent orderCancelRequestEvent) {
-        System.out.println(orderCancelRequestEvent.getMessage());
+        System.out.println("CANCEL MESSAGE= "+orderCancelRequestEvent.getMessage());
     }
 }
