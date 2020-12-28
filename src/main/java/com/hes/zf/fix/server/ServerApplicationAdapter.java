@@ -43,13 +43,14 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
 
     @Handler
     public void replaceOrder(quickfix.fix44.OrderCancelReplaceRequest message, SessionID sessionID) throws FieldNotFound {
+        log.info("replaceOrderHandler: SessionId={} Message={}", sessionID, message);
         publisher.publishEvent(new OrderCancelReplaceEvent(this,message));
 
     }
 
     @Handler
     public void cancelOrder(quickfix.fix44.OrderCancelRequest message, SessionID sessionID) throws FieldNotFound {
-        log.info("cancelOrderHandler: SessionId={}", sessionID);
+        log.info("cancelOrderHandler: SessionId={} Message={}", sessionID, message);
         publisher.publishEvent(new OrderCancelRequestEvent(this,message));
 
     }
