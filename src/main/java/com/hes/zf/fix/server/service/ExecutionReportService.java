@@ -15,6 +15,7 @@ public class ExecutionReportService {
 
     public static void send(NewOrderSingle order, OrdStatus ordStatus) {
 
+        OrigClOrdID origClOrdID = new OrigClOrdID(); //41 order.getOrigClOrdID
         log.info("m=send , sending order:{}", order);
         ExecutionReport message = new ExecutionReport();
 
@@ -22,6 +23,7 @@ public class ExecutionReportService {
         ClOrdID clOrdID = null; // new ClOrdID(); //11
         try {
             clOrdID = order.getClOrdID();
+            origClOrdID.setValue(order.getClOrdID().getValue());
             message.setField(clOrdID);
         } catch (FieldNotFound fieldNotFound) {
             log.error("ClOrdID not found", fieldNotFound);
@@ -113,50 +115,50 @@ public class ExecutionReportService {
             log.error("MinQty Field not found",fieldNotFound);
         }
 
-        SenderCompID senderCompID = new SenderCompID(); // 49
-        DeliverToSubID id = new DeliverToSubID(); // 129
-        DeliverToCompID deliverToCompID = new DeliverToCompID(); // 128
-        TargetCompID targetCompID = new TargetCompID(); // 56
-        SendingTime sendingTime = new SendingTime(LocalDateTime.now());// new SendingTime(); // 52
+//        SenderCompID senderCompID = new SenderCompID(); // 49
+//        DeliverToSubID id = new DeliverToSubID(); // 129
+//        DeliverToCompID deliverToCompID = new DeliverToCompID(); // 128
+//        TargetCompID targetCompID = new TargetCompID(); // 56
+//        SendingTime sendingTime = new SendingTime(LocalDateTime.now());// new SendingTime(); // 52
 
         AvgPx avgPx = new AvgPx(0); //06
         CumQty cumQty = new CumQty(0); // 14
-        IDSource idSource = new IDSource(); //22
+        IDSource idSource = new IDSource("8"); //22
         LastCapacity lastCapacity = new LastCapacity('1'); //29
-        LastMkt lastMkt = new LastMkt(); //30 //discuss yan
+//        LastMkt lastMkt = new LastMkt(); //30 //discuss yan
         LastPx lastPx = new LastPx(0); //31
         LastShares lastShares = new LastShares(0); //32
         OrderQty orderQty = new OrderQty(0); //38
-        OrigClOrdID origClOrdID = new OrigClOrdID(); //41 order.getOrigClOrdID
-        TransactTime transactTime = new TransactTime(); //60
-        ExecBroker execBroker = new ExecBroker(); //76
-        ExpireTime expireTime = new ExpireTime(); // 126
-        ExecType execType = new ExecType(); //150
-        LeavesQty leavesQty = new LeavesQty(); //151
-        SecurityExchange securityExchange = new SecurityExchange(); //207
+
+//        TransactTime transactTime = new TransactTime(); //60
+//        ExecBroker execBroker = new ExecBroker(); //76
+//        ExpireTime expireTime = new ExpireTime(); // 126
+        ExecType execType = new ExecType('8'); //150
+        LeavesQty leavesQty = new LeavesQty('0'); //151
+//        SecurityExchange securityExchange = new SecurityExchange(); //207
 
 
-        message.setField(senderCompID);
-        message.setField(id);
-        message.setField(deliverToCompID);
-        message.setField(targetCompID);
+//        message.setField(senderCompID);
+//        message.setField(id);
+//        message.setField(deliverToCompID);
+//        message.setField(targetCompID);
         message.setField(ordStatus);
-        message.setField(sendingTime);
+//        message.setField(sendingTime);
         message.setField(avgPx);
         message.setField(cumQty);
         message.setField(idSource);
         message.setField(lastCapacity);
-        message.setField(lastMkt);
+//        message.setField(lastMkt);
         message.setField(lastPx);
         message.setField(lastShares);
         message.setField(orderQty);
         message.setField(origClOrdID);
-        message.setField(transactTime);
-        message.setField(execBroker);
-        message.setField(expireTime);
+//        message.setField(transactTime);
+//        message.setField(execBroker);
+//        message.setField(expireTime);
         message.setField(execType);
         message.setField(leavesQty);
-        message.setField(securityExchange);
+//        message.setField(securityExchange);
 
 
         try {

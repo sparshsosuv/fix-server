@@ -3,6 +3,7 @@ package com.hes.zf.fix.server.message.handlers;
 import com.hes.zf.fix.server.infrastructure.OrderRepresentation;
 import com.hes.zf.fix.server.message.events.CreateNewOrderEvent;
 import com.hes.zf.fix.server.message.events.NewOrderCreatedEvent;
+import com.hes.zf.fix.server.service.ExecutionReportService;
 import com.hes.zf.fix.server.service.OrderService;
 import com.hes.zf.fix.server.service.SingleOrderMapper;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import quickfix.FieldNotFound;
+import quickfix.field.OrdStatus;
 
 @Component
 public class CreateNewOrderHandler implements ApplicationListener<CreateNewOrderEvent> {
@@ -38,6 +40,8 @@ public class CreateNewOrderHandler implements ApplicationListener<CreateNewOrder
             log.error("Filed not found", fieldNotFound);
             return;
         }
-        publisher.publishEvent(new NewOrderCreatedEvent(this,createNewOrderEvent.getMessage()));
+
+        ExecutionReportService.send(createNewOrderEvent.getMessage(), new OrdStatus(OrdStatus.REJECTED));
+
     }
 }
