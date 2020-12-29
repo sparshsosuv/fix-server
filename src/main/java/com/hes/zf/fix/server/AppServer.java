@@ -34,7 +34,7 @@ public class AppServer {
 
         executorService.scheduleAtFixedRate( () -> {
             try {
-                log.info("SENDING ORDER FROM CLIENT TO DEALING_SHEET");
+                log.info("SENDING ORDER FROM SERVER TO DEALING_SHEET");
                 Session.sendToTarget( getNewOrderSingle(), "SERVER", FixSession.DEALING_SHEET.name() );
             } catch (SessionNotFound e) {
                 e.printStackTrace();
