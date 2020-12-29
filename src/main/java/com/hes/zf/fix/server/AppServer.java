@@ -16,12 +16,15 @@ import java.time.Period;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @EnableQuickFixJServer
 @SpringBootApplication
 public class AppServer {
 
     private static final Logger log = LoggerFactory.getLogger(AppServer.class);
+
+    private static final AtomicInteger COUNTER = new AtomicInteger();
 
     public static void main(String[] args) {
         SpringApplication.run(AppServer.class, args);
@@ -31,14 +34,13 @@ public class AppServer {
 
         executorService.scheduleAtFixedRate( () -> {
             try {
-
                 log.info("SENDING ORDER FROM CLIENT TO DEALING_SHEET");
                 Session.sendToTarget( getNewOrderSingle(), "SERVER", FixSession.DEALING_SHEET.name() );
             } catch (SessionNotFound e) {
                 e.printStackTrace();
             }
 
-        }, 25, 30, TimeUnit.SECONDS);
+        }, 30, 120, TimeUnit.SECONDS);
 
     }
 
@@ -64,17 +66,19 @@ public class AppServer {
         final TransactTime transactTime = new TransactTime( LocalDateTime.now() );
         final OrdType ordType = new OrdType( OrdType.MARKET );
 
+        final int counter = COUNTER.getAndIncrement();
+
         final NewOrderSingle newOrderSingle = new NewOrderSingle( clOrdID, side, transactTime, ordType );
         newOrderSingle.setField( new TimeInForce( TimeInForce.DAY ) );
-        newOrderSingle.setField( new Currency( "USE" ) );
+        newOrderSingle.setField( new Currency( "USD" ) );
         newOrderSingle.setField( new SecurityExchange( "NL" ) );
         newOrderSingle.setField( new IDSource( IDSource.RIC_CODE ) );
         newOrderSingle.setField( new SecurityID( "TEST" ) );
-        newOrderSingle.setField( new Symbol( "APPLE" ) );
+        newOrderSingle.setField( new Symbol( "APPLE " + counter ) );
         newOrderSingle.setField( new HandlInst( HandlInst.MANUAL_ORDER_BEST_EXECUTION ) );
         newOrderSingle.setField( new OrderQty( 1000d ) );
         newOrderSingle.setField( new Price( 90d ) );
-        newOrderSingle.setField( new Account( "XYZ" ) );
+        newOrderSingle.setField( new Account( "Account " + counter ) );
         newOrderSingle.setField( new MinQty( 999d ) );
         newOrderSingle.setField( new Text( "TEXT" ) );
         newOrderSingle.setField( new ExpireTime( LocalDateTime.now().plus( Period.ofMonths(1) ) ) );
