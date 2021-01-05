@@ -1,6 +1,7 @@
 package com.hes.zf.fix.server;
 
 import com.hes.zf.fix.server.message.events.CreateNewOrderEvent;
+import com.hes.zf.fix.server.message.events.ExecutionReportEvent;
 import com.hes.zf.fix.server.message.events.OrderCancelReplaceEvent;
 import com.hes.zf.fix.server.message.events.OrderCancelRequestEvent;
 import org.slf4j.Logger;
@@ -31,6 +32,13 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
 
         message.getHeader().getString(SenderCompID.FIELD);
         crack(message, sessionId);
+
+    }
+
+    @Handler
+    public void executionReport(quickfix.fix44.ExecutionReport message, SessionID sessionID) throws FieldNotFound {
+        log.info("executionReport: SessionId={}", sessionID);
+        publisher.publishEvent(new ExecutionReportEvent(this,message));
 
     }
 

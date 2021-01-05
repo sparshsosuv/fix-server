@@ -29,18 +29,18 @@ public class AppServer {
     public static void main(String[] args) {
         SpringApplication.run(AppServer.class, args);
 
-        final ScheduledExecutorService executorService = Executors
-                .newSingleThreadScheduledExecutor();
+//        final ScheduledExecutorService executorService = Executors
+//                .newSingleThreadScheduledExecutor();
 
-        executorService.scheduleAtFixedRate( () -> {
-            try {
-                log.info("SENDING ORDER FROM SERVER TO DEALING_SHEET");
-                Session.sendToTarget( getNewOrderSingle(), "SERVER", FixSession.DEALING_SHEET.name() );
-            } catch (SessionNotFound e) {
-                e.printStackTrace();
-            }
-
-        }, 30, 120, TimeUnit.SECONDS);
+//        executorService.scheduleAtFixedRate( () -> {
+//            try {
+//                log.info("SENDING ORDER FROM SERVER TO DEALING_SHEET");
+//                Session.sendToTarget( getNewOrderSingle(), "SERVER", FixSession.DEALING_SHEET.name() );
+//            } catch (SessionNotFound e) {
+//                e.printStackTrace();
+//            }
+//
+//        }, 30, 120, TimeUnit.SECONDS);
 
     }
 
@@ -59,33 +59,33 @@ public class AppServer {
 
     }
 
-    private static NewOrderSingle getNewOrderSingle(){
-
-        final ClOrdID clOrdID = new ClOrdID( "1" );
-        final Side side = new Side( 'B' );
-        final TransactTime transactTime = new TransactTime( LocalDateTime.now() );
-        final OrdType ordType = new OrdType( OrdType.MARKET );
-
-        final int counter = COUNTER.getAndIncrement();
-
-        final NewOrderSingle newOrderSingle = new NewOrderSingle( clOrdID, side, transactTime, ordType );
-        newOrderSingle.setField( new TimeInForce( TimeInForce.DAY ) );
-        newOrderSingle.setField( new Currency( "USD" ) );
-        newOrderSingle.setField( new SecurityExchange( "NL" ) );
-        newOrderSingle.setField( new IDSource( IDSource.RIC_CODE ) );
-        newOrderSingle.setField( new SecurityID( "TEST" ) );
-        newOrderSingle.setField( new Symbol( "APPLE " + counter ) );
-        newOrderSingle.setField( new HandlInst( HandlInst.MANUAL_ORDER_BEST_EXECUTION ) );
-        newOrderSingle.setField( new OrderQty( 1000d ) );
-        newOrderSingle.setField( new Price( 90d ) );
-        newOrderSingle.setField( new Account( "Account " + counter ) );
-        newOrderSingle.setField( new MinQty( 999d ) );
-        newOrderSingle.setField( new Text( "TEXT" ) );
-        newOrderSingle.setField( new ExpireTime( LocalDateTime.now().plus( Period.ofMonths(1) ) ) );
-
-        //newOrderSingle.setField( new DeliverToCompID( "Test Securities" ) ); // 128
-        newOrderSingle.getHeader().setField( new DeliverToCompID( "Test Securities" ) );
-
-        return newOrderSingle;
-    }
+//    private static NewOrderSingle getNewOrderSingle(){
+//
+//        final ClOrdID clOrdID = new ClOrdID( "1" );
+//        final Side side = new Side( 'B' );
+//        final TransactTime transactTime = new TransactTime( LocalDateTime.now() );
+//        final OrdType ordType = new OrdType( OrdType.MARKET );
+//
+//        final int counter = COUNTER.getAndIncrement();
+//
+//        final NewOrderSingle newOrderSingle = new NewOrderSingle( clOrdID, side, transactTime, ordType );
+//        newOrderSingle.setField( new TimeInForce( TimeInForce.DAY ) );
+//        newOrderSingle.setField( new Currency( "USD" ) );
+//        newOrderSingle.setField( new SecurityExchange( "NL" ) );
+//        newOrderSingle.setField( new IDSource( IDSource.RIC_CODE ) );
+//        newOrderSingle.setField( new SecurityID( "TEST" ) );
+//        newOrderSingle.setField( new Symbol( "APPLE " + counter ) );
+//        newOrderSingle.setField( new HandlInst( HandlInst.MANUAL_ORDER_BEST_EXECUTION ) );
+//        newOrderSingle.setField( new OrderQty( 1000d ) );
+//        newOrderSingle.setField( new Price( 90d ) );
+//        newOrderSingle.setField( new Account( "Account " + counter ) );
+//        newOrderSingle.setField( new MinQty( 999d ) );
+//        newOrderSingle.setField( new Text( "TEXT" ) );
+//        newOrderSingle.setField( new ExpireTime( LocalDateTime.now().plus( Period.ofMonths(1) ) ) );
+//
+//        //newOrderSingle.setField( new DeliverToCompID( "Test Securities" ) ); // 128
+//        newOrderSingle.getHeader().setField( new DeliverToCompID( "Test Securities" ) );
+//
+//        return newOrderSingle;
+//    }
 }

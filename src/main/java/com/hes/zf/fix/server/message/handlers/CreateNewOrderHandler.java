@@ -1,18 +1,16 @@
 package com.hes.zf.fix.server.message.handlers;
 
-import com.hes.zf.fix.server.infrastructure.OrderRepresentation;
 import com.hes.zf.fix.server.message.events.CreateNewOrderEvent;
-import com.hes.zf.fix.server.message.events.NewOrderCreatedEvent;
-import com.hes.zf.fix.server.service.ExecutionReportService;
 import com.hes.zf.fix.server.service.OrderService;
 import com.hes.zf.fix.server.service.SingleOrderMapper;
+import com.hes.zf.fix.server.type.FixSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
-import quickfix.FieldNotFound;
-import quickfix.field.OrdStatus;
+import quickfix.Session;
+import quickfix.SessionNotFound;
 
 @Component
 public class CreateNewOrderHandler implements ApplicationListener<CreateNewOrderEvent> {
@@ -32,16 +30,12 @@ public class CreateNewOrderHandler implements ApplicationListener<CreateNewOrder
 
     @Override
     public void onApplicationEvent(CreateNewOrderEvent createNewOrderEvent) {
-        OrderRepresentation order = null;
+        log.info("SENDING createNewOrderEvent FROM SERVER TO WORKFLOW");
         try {
-            order = mapper.messageToOrder(createNewOrderEvent.getMessage());
-            service.createOrder(order);
-        } catch (FieldNotFound fieldNotFound) {
-            log.error("Filed not found", fieldNotFound);
-            return;
+            Session.sendToTarget( createNewOrderEvent.getMessage(), FixSession.SERVER.name(), FixSession.WORKFLOW.name() );
+        } catch (SessionNotFound sessionNotFound) {
+            sessionNotFound.printStackTrace();
+            log.error("Session not found");
         }
-
-        ExecutionReportService.send(createNewOrderEvent.getMessage(), new OrdStatus(OrdStatus.REJECTED));
-
     }
 }
