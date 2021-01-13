@@ -23,7 +23,7 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
     @Override
     public void fromAdmin(Message message, SessionID sessionId)
             throws FieldNotFound, IncorrectDataFormat, IncorrectTagValue, RejectLogon {
-        log.info("fromAdmin: Message={}, SessionId={}", message, sessionId);
+        log.info("\nfromAdmin: Message={}, SessionId={}", message, sessionId);
     }
 
     @Override
@@ -37,54 +37,54 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
 
     @Handler
     public void executionReport(quickfix.fix44.ExecutionReport message, SessionID sessionID) throws FieldNotFound {
-        log.info("executionReport: SessionId={}", sessionID);
+        log.info("\nexecutionReport: SessionId={}", sessionID);
         publisher.publishEvent(new ExecutionReportEvent(this,message));
 
     }
 
     @Handler
     public void newOrderHandler(quickfix.fix44.NewOrderSingle message, SessionID sessionID) throws FieldNotFound {
-        log.info("newOrderHandler: SessionId={}", sessionID);
+        log.info("\nnewOrderHandler: SessionId={}", sessionID);
         publisher.publishEvent(new CreateNewOrderEvent(this,message));
 
     }
 
     @Handler
     public void replaceOrder(quickfix.fix44.OrderCancelReplaceRequest message, SessionID sessionID) throws FieldNotFound {
-        log.info("replaceOrderHandler: SessionId={} Message={}", sessionID, message);
+        log.info("\nreplaceOrderHandler: SessionId={} Message={}", sessionID, message);
         publisher.publishEvent(new OrderCancelReplaceEvent(this,message));
 
     }
 
     @Handler
     public void cancelOrder(quickfix.fix44.OrderCancelRequest message, SessionID sessionID) throws FieldNotFound {
-        log.info("cancelOrderHandler: SessionId={} Message={}", sessionID, message);
+        log.info("\ncancelOrderHandler: SessionId={} Message={}", sessionID, message);
         publisher.publishEvent(new OrderCancelRequestEvent(this,message));
 
     }
 
     @Override
     public void onCreate(SessionID sessionId) {
-        log.info("onCreate: SessionId={}", sessionId);
+        log.info("\nonCreate: SessionId={}", sessionId);
     }
 
     @Override
     public void onLogon(SessionID sessionId) {
-        log.info("onLogon: SessionId={}", sessionId);
+        log.info("\nonLogon: SessionId={}", sessionId);
     }
 
     @Override
     public void onLogout(SessionID sessionId) {
-        log.info("onLogout: SessionId={}", sessionId);
+        log.info("\nonLogout: SessionId={}", sessionId);
     }
 
     @Override
     public void toAdmin(Message message, SessionID sessionId) {
-        log.info("toAdmin: Message={}, SessionId={}", message, sessionId);
+        log.info("\ntoAdmin: Message={}, SessionId={}", message, sessionId);
     }
 
     @Override
     public void toApp(Message message, SessionID sessionId) throws DoNotSend {
-        log.info("toApp: Message={}, SessionId={}", message, sessionId);
+        log.info("\ntoApp: Message={}, SessionId={}", message, sessionId);
     }
 }

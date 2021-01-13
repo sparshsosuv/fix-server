@@ -59,12 +59,12 @@
         <appender-ref ref="ROOT_FILE_ASYNC_APPENDER"/>
     </root>
 
-    <logger name="com.hes.zf.fix.server.ServerApplicationAdapter" level="INFO" additivity="true">
+    <logger name="com.hes.zf.fix.server.ServerApplicationAdapter" level="INFO">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FIX_FILE_ASYNC_APPENDER"/>
     </logger>
 
-    <logger name="com.hes.zf.fix.server.service.ExecutionReportService" level="INFO" additivity="true">
+    <logger name="com.hes.zf.fix.server.service.ExecutionReportService" level="INFO" >
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FIX_FILE_ASYNC_APPENDER"/>
     </logger>
