@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -17,14 +18,14 @@ public class FixMessage{
     private Long id;
 
     @Column(name = "created_at")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Lob
     @Column(name = "message")
     private String message;
 
-    public FixMessage(Date createdAt, String message){
-        this.createdAt = createdAt;
+    public FixMessage(String message){
+        this.createdAt = LocalDateTime.now();
 
         if( message != null ){
             this.message = message.replaceAll("\u0001", " ");
