@@ -11,6 +11,8 @@ import quickfix.Session;
 import quickfix.SessionNotFound;
 import quickfix.field.SenderCompID;
 
+import java.util.Arrays;
+
 @Component
 public class ExecutionReportHandler implements ApplicationListener<ExecutionReportEvent> {
 
@@ -20,15 +22,24 @@ public class ExecutionReportHandler implements ApplicationListener<ExecutionRepo
     public void onApplicationEvent(ExecutionReportEvent executionReportEvent) {
         try {
             String sender = executionReportEvent.getMessage().getHeader().getString(SenderCompID.FIELD);
-            if(FixSession.CLIENT.name().equalsIgnoreCase(sender)) {
-                Session.sendToTarget( executionReportEvent.getMessage(), FixSession.SERVER.name(), FixSession.WORKFLOW.name() );
-            } else {
-                Session.sendToTarget( executionReportEvent.getMessage(), FixSession.SERVER.name(), FixSession.CLIENT.name() );
-            }
-        } catch (FieldNotFound | SessionNotFound ex){
+            Arrays.stream(FixSession.values())
+                    .filter(fixSession -> !sender.equalsIgnoreCase(fixSession.name()))
+                    .forEach(fixSession -> sendToTarget(executionReportEvent, fixSession));
+        } catch (FieldNotFound ex){
             log.error("FieldNotFound on execution report event");
             ex.printStackTrace();
         }
 
+    }
+
+    private boolean sendToTarget(ExecutionReportEvent executionReportEvent, FixSession fixSession) {
+        boolean sent = false;
+        try {
+            sent = Session.sendToTarget(executionReportEvent.getMessage(), FixSession.SERVER.name(), fixSession.name());
+        } catch (SessionNotFound ex){
+            log.error("FieldNotFound on execution report event");
+            ex.printStackTrace();
+        }
+        return sent;
     }
 }
