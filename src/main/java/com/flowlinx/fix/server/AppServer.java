@@ -31,11 +31,11 @@ public class AppServer {
     }
 
     @Bean
-    public Acceptor serverAcceptor(ServerApplicationAdapter serverApplicationAdapter, MessageStoreFactory serverMessageStoreFactory,
+    public Initiator serverInitiator(ServerApplicationAdapter serverApplicationAdapter, MessageStoreFactory serverMessageStoreFactory,
                                    SessionSettings serverSessionSettings, LogFactory serverLogFactory,
                                    MessageFactory serverMessageFactory) throws ConfigError {
 
-        return new ThreadedSocketAcceptor(serverApplicationAdapter, serverMessageStoreFactory, serverSessionSettings,
+        return new ThreadedSocketInitiator(serverApplicationAdapter, serverMessageStoreFactory, serverSessionSettings,
                 serverLogFactory, serverMessageFactory);
 
     }
