@@ -32,10 +32,20 @@ public class AppServer {
 
     @Bean
     public Initiator serverInitiator(ServerApplicationAdapter serverApplicationAdapter, MessageStoreFactory serverMessageStoreFactory,
-                                   SessionSettings serverSessionSettings, LogFactory serverLogFactory,
-                                   MessageFactory serverMessageFactory) throws ConfigError {
+                                     SessionSettings serverSessionSettings, LogFactory serverLogFactory,
+                                     MessageFactory serverMessageFactory) throws ConfigError {
 
         return new ThreadedSocketInitiator(serverApplicationAdapter, serverMessageStoreFactory, serverSessionSettings,
+                serverLogFactory, serverMessageFactory);
+
+    }
+
+    @Bean
+    public Acceptor serverAcceptor(ServerApplicationAdapter serverApplicationAdapter, MessageStoreFactory serverMessageStoreFactory,
+                                     SessionSettings serverSessionSettings, LogFactory serverLogFactory,
+                                     MessageFactory serverMessageFactory) throws ConfigError {
+
+        return new ThreadedSocketAcceptor(serverApplicationAdapter, serverMessageStoreFactory, serverSessionSettings,
                 serverLogFactory, serverMessageFactory);
 
     }
