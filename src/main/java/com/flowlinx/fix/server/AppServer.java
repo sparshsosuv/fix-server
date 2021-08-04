@@ -18,8 +18,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @SpringBootApplication
 @EnableWebMvc
 @ComponentScan("com.flowlinx.fix.server")
-@EntityScan("com.flowlinx.fix.server.persistence")
-@EnableJpaRepositories("com.flowlinx.fix.server.persistence")
+//@EntityScan("com.flowlinx.fix.server.persistence")
+//@EnableJpaRepositories("com.flowlinx.fix.server.persistence")
 public class AppServer {
 
     private static final Logger log = LoggerFactory.getLogger(AppServer.class);

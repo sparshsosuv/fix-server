@@ -20,12 +20,16 @@ public class FixMessage{
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "test")
+    private String test = "TEST";
+
     @Lob
     @Column(name = "message")
     private String message;
 
     public FixMessage(String message){
         this.createdAt = LocalDateTime.now();
+        this.test = "TEST";
 
         if( message != null ){
             this.message = message.replaceAll("\u0001", " ");

@@ -1,8 +1,6 @@
 package com.flowlinx.fix.server.message.handlers;
 
 import com.flowlinx.fix.server.message.events.CreateNewOrderEvent;
-import com.flowlinx.fix.server.service.OrderService;
-import com.flowlinx.fix.server.service.SingleOrderMapper;
 import com.flowlinx.fix.server.type.FixSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,17 +14,7 @@ import quickfix.SessionNotFound;
 public class CreateNewOrderHandler implements ApplicationListener<CreateNewOrderEvent> {
 
     private static final Logger log = LoggerFactory.getLogger(CreateNewOrderHandler.class);
-
-    private SingleOrderMapper mapper;
-    private OrderService service;
     private ApplicationEventPublisher publisher;
-
-
-    public CreateNewOrderHandler(SingleOrderMapper mapper, OrderService service, ApplicationEventPublisher publisher) {
-        this.mapper = mapper;
-        this.service = service;
-        this.publisher = publisher;
-    }
 
     @Override
     public void onApplicationEvent(CreateNewOrderEvent createNewOrderEvent) {
