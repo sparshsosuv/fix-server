@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.flowlinx</groupId>
-    <artifactId>fix-server</artifactId>
+    <artifactId>flowlinx-fix-server</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <parent>
@@ -18,10 +18,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <quickfixj-spring-boot-starter.version>2.7.1</quickfixj-spring-boot-starter.version>
+        <quickfixj-spring-boot-starter.version>2.9.0</quickfixj-spring-boot-starter.version>
         <oi.github.openfeign.version>10.10.1</oi.github.openfeign.version>
         <org.mapstruct.version>1.4.1.Final</org.mapstruct.version>
-
+        <postgresql.version>9.4.1212</postgresql.version>
     </properties>
 
     <dependencies>
@@ -76,9 +76,23 @@
         </dependency>
 
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.cloudhopper.proxool</groupId>
+            <artifactId>proxool</artifactId>
+            <version>0.9.1</version>
         </dependency>
 
         <dependency>

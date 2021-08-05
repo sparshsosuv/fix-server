@@ -1,7 +1,7 @@
 package com.flowlinx.fix.server.resource;
 
-import com.flowlinx.fix.server.persistence.FixMessage;
-import com.flowlinx.fix.server.persistence.FixMessageRepo;
+import com.flowlinx.fix.server.domain.FixMessage;
+import com.flowlinx.fix.server.repository.FixMessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class LogResource {
 
     @Autowired
-    private FixMessageRepo fixMessageRepo;
+    private FixMessageRepository fixMessageRepository;
 
     @GetMapping(
             produces = MediaType.APPLICATION_JSON_VALUE,
@@ -38,7 +38,7 @@ public class LogResource {
 
         final Pageable pageable = getPageable(page - 1, size, sort, desc);
 
-        final Page<FixMessage> messages = fixMessageRepo.findByCreatedAtBetween(start, finalDate, pageable);
+        final Page<FixMessage> messages = fixMessageRepository.findByCreatedAtBetween(start, finalDate, pageable);
 
         return ResponseEntity.ok(messages);
     }
