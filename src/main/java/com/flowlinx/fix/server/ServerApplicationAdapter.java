@@ -1,24 +1,23 @@
 package com.flowlinx.fix.server;
 
-import com.flowlinx.fix.server.message.events.CreateNewOrderEvent;
-import com.flowlinx.fix.server.message.events.ExecutionReportEvent;
-import com.flowlinx.fix.server.message.events.OrderCancelReplaceEvent;
-import com.flowlinx.fix.server.message.events.OrderCancelRequestEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.flowlinx.fix.server.message.event.ClientEvent;
+import com.flowlinx.fix.server.message.event.WorkflowEvent;
+import com.flowlinx.fix.server.type.FixTargetSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import quickfix.*;
-import quickfix.field.SenderCompID;
 
+import java.util.Arrays;
+import java.util.Optional;
+
+@Slf4j
 @Component
 public class ServerApplicationAdapter extends MessageCracker implements Application {
 
     @Autowired
     private ApplicationEventPublisher publisher;
-
-    private static final Logger log = LoggerFactory.getLogger(ServerApplicationAdapter.class);
 
     @Override
     public void fromAdmin(Message message, SessionID sessionId)
@@ -34,37 +33,12 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
     @Override
     public void fromApp(Message message, SessionID sessionId)
             throws FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType {
-        message.getHeader().getString(SenderCompID.FIELD);
         crack(message, sessionId);
     }
 
     @Override
     public void toApp(Message message, SessionID sessionId) throws DoNotSend {
         log.info("toApp: Message={}, SessionId={}", message, sessionId);
-    }    
-
-    @Handler
-    public void executionReport(quickfix.fix44.ExecutionReport message, SessionID sessionID) throws FieldNotFound {
-        log.info("executionReport: SessionId={}", sessionID);
-        // publisher.publishEvent( new ExecutionReportEvent(this,message) );
-    }
-
-    @Handler
-    public void newOrderHandler(quickfix.fix44.NewOrderSingle message, SessionID sessionID) throws FieldNotFound {
-        log.info("newOrderHandler: SessionId={}", sessionID);
-        // publisher.publishEvent( new CreateNewOrderEvent(this,message) );
-    }
-
-    @Handler
-    public void replaceOrder(quickfix.fix44.OrderCancelReplaceRequest message, SessionID sessionID) throws FieldNotFound {
-        log.info("replaceOrderHandler: SessionId={} Message={}", sessionID, message);
-        // publisher.publishEvent( new OrderCancelReplaceEvent(this,message) );
-    }
-
-    @Handler
-    public void cancelOrder(quickfix.fix44.OrderCancelRequest message, SessionID sessionID) throws FieldNotFound {
-        log.info("cancelOrderHandler: SessionId={} Message={}", sessionID, message);
-        // publisher.publishEvent(new OrderCancelRequestEvent(this,message));
     }
 
     @Override
@@ -80,6 +54,40 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
     @Override
     public void onLogout(SessionID sessionId) {
         log.info("onLogout: SessionId={}", sessionId);
+    }
+
+    @Handler
+    public void executionReport(quickfix.fix44.ExecutionReport message, SessionID sessionID) {
+        publishEvent( message, sessionID );
+    }
+
+    @Handler
+    public void newOrderHandler(quickfix.fix44.NewOrderSingle message, SessionID sessionID) {
+        publishEvent( message, sessionID );
+    }
+
+    @Handler
+    public void replaceOrder(quickfix.fix44.OrderCancelReplaceRequest message, SessionID sessionID) {
+        publishEvent( message, sessionID );
+    }
+
+    @Handler
+    public void cancelOrder(quickfix.fix44.OrderCancelRequest message, SessionID sessionID) {
+        publishEvent( message, sessionID );
+    }
+
+    private void publishEvent(quickfix.fix44.Message message, SessionID sessionID) {
+
+        final Optional<FixTargetSession> optSession = Arrays.stream(FixTargetSession.values())
+                .filter(t -> t.name().equalsIgnoreCase( sessionID.getTargetCompID() ) ).findFirst();
+
+        if( optSession.isPresent() ){
+            publisher.publishEvent( new WorkflowEvent( message, sessionID ) );
+
+        } else {
+            publisher.publishEvent( new ClientEvent( message, sessionID ) );
+        }
+
     }
 
 }
