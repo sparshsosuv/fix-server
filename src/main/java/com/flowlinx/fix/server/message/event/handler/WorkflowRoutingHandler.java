@@ -16,7 +16,7 @@ import quickfix.fix44.Message;
 @Component
 public class WorkflowRoutingHandler implements ApplicationListener<WorkflowEvent> {
 
-    private static final String FLOWLINX_WORKFLOW = "FLOWLINX_WORKFLOW";
+    private static final String FLX_WORKFLOW = "FLX_WORKFLOW";
 
     @Override
     public void onApplicationEvent(WorkflowEvent event) {
@@ -26,7 +26,7 @@ public class WorkflowRoutingHandler implements ApplicationListener<WorkflowEvent
             final String onBehalfOfCompId = message.getHeader().getString( SenderCompID.FIELD );
 
             message.getHeader().setField( new OnBehalfOfCompID( onBehalfOfCompId ) );
-            Session.sendToTarget( message, FixSenderSession.FLOWLINX_SERVER.name(), FLOWLINX_WORKFLOW );
+            Session.sendToTarget( message, FixSenderSession.FLX_SERVER.name(), FLX_WORKFLOW );
 
         } catch (SessionNotFound | FieldNotFound sessionNotFound) {
             sessionNotFound.printStackTrace();

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 @Getter
 public enum FixTargetSession {
-    FLOWLINX_CLIENT_SIMULATOR( FixSenderSession.FLOWLINX_SERVER),
+    FLX_SIMULATOR( FixSenderSession.FLX_SERVER),
     RECAUAT( FixSenderSession.FLOWLINXUAT );
 
     FixSenderSession sender;
