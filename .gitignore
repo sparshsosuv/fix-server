@@ -25,7 +25,7 @@ dist/
 
 # JetBrains IDE
 .idea/
-zf-fix-server.iml
+flowlinx-fix-server.iml
 
 # Unit test reports
 TEST*.xml
