@@ -24,7 +24,7 @@ public class FixAcceptorResource {
     @Autowired
     private Mapper mapper;
 
-    //@Autowired
+    @Autowired
     private Acceptor acceptor;
 
     @GetMapping( value = {"/session"})
