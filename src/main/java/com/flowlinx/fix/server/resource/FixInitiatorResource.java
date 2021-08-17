@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import quickfix.Initiator;
 import quickfix.Session;
 import quickfix.SessionID;
+import quickfix.ThreadedSocketInitiator;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class FixInitiatorResource {
     private Mapper mapper;
 
     @Autowired
-    private Initiator initiator;
+    private ThreadedSocketInitiator initiator;
 
     @GetMapping( value = {"/session"})
     public ResponseEntity<List<SessionID>> sessions() {

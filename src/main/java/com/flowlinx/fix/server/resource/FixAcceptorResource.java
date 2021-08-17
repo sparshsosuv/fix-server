@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import quickfix.Acceptor;
 import quickfix.Session;
 import quickfix.SessionID;
+import quickfix.ThreadedSocketAcceptor;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class FixAcceptorResource {
     private Mapper mapper;
 
     @Autowired
-    private Acceptor acceptor;
+    private ThreadedSocketAcceptor acceptor;
 
     @GetMapping( value = {"/session"})
     public ResponseEntity<List<SessionID>> sessions() {
