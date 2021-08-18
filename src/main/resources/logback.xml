@@ -16,32 +16,10 @@
         </encoder>
     </appender>
 
-    <appender name="FIX_MESSAGE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_LOCATION:-.}/flowlinx-fix-server-message.txt</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${APP_BASE_DIR:-.}/logs/flowlinx-fix-server-message-%d{yyyy-MM-dd-:hh:mm:ss}.zip</fileNamePattern>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <maxFileSize>1MB</maxFileSize>
-        </triggeringPolicy>
-        <encoder>
-            <charset>UTF-8</charset>
-            <immediateFlush>true</immediateFlush>
-            <pattern>%date{ISO8601} %-5level [%-16thread] %logger{40} - %msg%n</pattern>
-        </encoder>
-    </appender>
-
     <appender name="ROOT_FILE_ASYNC_APPENDER" class="ch.qos.logback.classic.AsyncAppender">
         <queueSize>1000</queueSize>
         <discardingThreshold>0</discardingThreshold>
         <appender-ref ref="ROOT_FILE"/>
-    </appender>
-
-    <appender name="FIX_FILE_ASYNC_APPENDER" class="ch.qos.logback.classic.AsyncAppender">
-        <queueSize>1000</queueSize>
-        <discardingThreshold>0</discardingThreshold>
-        <appender-ref ref="FIX_MESSAGE_FILE"/>
     </appender>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -58,15 +36,5 @@
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="ROOT_FILE_ASYNC_APPENDER"/>
     </root>
-
-    <logger name="com.flowlinx.fix.server.ServerApplicationAdapter" level="INFO">
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="FIX_FILE_ASYNC_APPENDER"/>
-    </logger>
-
-    <logger name="com.flowlinx.fix.server.service.ExecutionReportService" level="INFO" >
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="FIX_FILE_ASYNC_APPENDER"/>
-    </logger>
 
 </configuration>

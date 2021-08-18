@@ -81,7 +81,7 @@ public class ClientApplicationAdapter extends MessageCracker implements Applicat
         final Optional<FixTargetSession> optSession = Arrays.stream(FixTargetSession.values())
                 .filter(t -> t.name().equalsIgnoreCase( sessionID.getTargetCompID() ) ).findFirst();
 
-        if( optSession.isPresent() ){
+            if( optSession.isPresent() ){
             publisher.publishEvent( new WorkflowEvent( message, sessionID ) );
 
         } else {
