@@ -1,5 +1,6 @@
 package com.flowlinx.fix.server.message.event.handler;
 
+import com.flowlinx.fix.server.FixConstants;
 import com.flowlinx.fix.server.message.event.WorkflowEvent;
 import com.flowlinx.fix.server.type.FixSenderSession;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +24,9 @@ public class WorkflowRoutingHandler implements ApplicationListener<WorkflowEvent
 
         try{
             final Message message = event.getMessage();
-            final String onBehalfOfCompId = message.getHeader().getString( SenderCompID.FIELD );
+            final String senderCompId = message.getHeader().getString( SenderCompID.FIELD );
+            message.setString( FixConstants.FLX_TARGET_COMP_ID, senderCompId );
 
-            message.getHeader().setField( new OnBehalfOfCompID( onBehalfOfCompId ) );
             Session.sendToTarget( message, FixSenderSession.FLX_SERVER.name(), FLX_WORKFLOW );
 
         } catch (SessionNotFound | FieldNotFound sessionNotFound) {

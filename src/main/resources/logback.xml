@@ -6,8 +6,8 @@
     <appender name="ROOT_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_LOCATION:-.}/flowlinx-fix-server.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${APP_BASE_DIR:-.}/logs/flowlinx-fix-server-%d{yyyy-MM-dd-hh:mm:ss}.zip</fileNamePattern>
-            <maxHistory>30</maxHistory>
+            <fileNamePattern>${LOG_LOCATION:-.}/flowlinx-fix-server-%d{yyyy-MM-dd-hh:mm:ss}.zip</fileNamePattern>
+            <maxHistory>14</maxHistory>
         </rollingPolicy>
         <encoder>
             <charset>UTF-8</charset>
