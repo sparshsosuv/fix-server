@@ -24,17 +24,19 @@ public class FixIncomeMessage implements FixEntity {
     @Column(name = "beginstring")
     private String beginstring;
 
+    @Id
     @Column(name = "sendercompid")
     private String sendercompid;
+
+    @Id
+    @Column(name = "targetcompid")
+    private String targetcompid;
 
     @Column(name = "sendersubid")
     private String sendersubid;
 
     @Column(name = "senderlocid")
     private String senderlocid;
-
-    @Column(name = "targetcompid")
-    private String targetcompid;
 
     @Column(name = "targetsubid")
     private String targetsubid;
@@ -55,6 +57,8 @@ public class FixIncomeMessage implements FixEntity {
     public static class PK implements Serializable {
         private LocalDateTime time;
         private String beginstring;
+        private String sendercompid;
+        private String targetcompid;
     }
 
 }

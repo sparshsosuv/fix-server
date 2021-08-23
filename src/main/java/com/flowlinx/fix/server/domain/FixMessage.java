@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @Data @AllArgsConstructor @NoArgsConstructor
 @Entity
 @Table( name = "messages")
-@IdClass(Message.PK.class)
-public class Message implements Serializable {
+@IdClass(FixMessage.PK.class)
+public class FixMessage implements Serializable {
 
     @Id
     @Column(name = "time")
@@ -24,17 +24,19 @@ public class Message implements Serializable {
     @Column(name = "beginstring")
     private String beginstring;
 
+    @Id
     @Column(name = "sendercompid")
     private String sendercompid;
+
+    @Id
+    @Column(name = "targetcompid")
+    private String targetcompid;
 
     @Column(name = "sendersubid")
     private String sendersubid;
 
     @Column(name = "senderlocid")
     private String senderlocid;
-
-    @Column(name = "targetcompid")
-    private String targetcompid;
 
     @Column(name = "targetsubid")
     private String targetsubid;
@@ -55,6 +57,8 @@ public class Message implements Serializable {
     public static class PK implements Serializable {
         private LocalDateTime time;
         private String beginstring;
+        private String sendercompid;
+        private String targetcompid;
     }
 
 }
