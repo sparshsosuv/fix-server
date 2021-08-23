@@ -1,6 +1,9 @@
 package com.flowlinx.fix.server.domain;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -8,64 +11,50 @@ import java.time.LocalDateTime;
 
 @Data @AllArgsConstructor @NoArgsConstructor
 @Entity
-@Table( name = "messages")
-@IdClass(FixMessage.FixMessagePK.class)
-public class FixMessage {
+@Table( name = "log_events")
+@IdClass(FixLogEvent.PK.class)
+public class FixLogEvent implements FixEntity {
 
+    @Id
     @Column(name = "time")
-    private LocalDateTime createdAt;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime time;
 
     @Id
     @Column(name = "beginstring")
     private String beginstring;
 
-    @Id
     @Column(name = "sendercompid")
     private String sendercompid;
 
     @Column(name = "sendersubid")
     private String sendersubid;
 
-    @Id
     @Column(name = "senderlocid")
     private String senderlocid;
 
-    @Id
     @Column(name = "targetcompid")
     private String targetcompid;
 
-    @Id
     @Column(name = "targetsubid")
     private String targetsubid;
 
-    @Id
     @Column(name = "targetlocid")
     private String targetlocid;
 
-    @Id
     @Column(name = "session_qualifier")
-    private String session_qualifier;
+    private String sessionqualifier;
 
-    @Id
-    @Column(name = "msgseqnum")
-    private Integer msgseqnum;
+    @Column(name = "text")
+    private String text;
 
-    @Column(name = "message")
-    private String message;
+    @Transient
+    private String msgType;
 
     @Data
-    public static class FixMessagePK implements Serializable {
-
+    public static class PK implements Serializable {
+        private LocalDateTime time;
         private String beginstring;
-        private String sendercompid;
-        private String sendersubid;
-        private String senderlocid;
-        private String targetcompid;
-        private String targetsubid;
-        private String targetlocid;
-        private String session_qualifier;
-        private Integer msgseqnum;
-
     }
 
 }

@@ -1,11 +1,8 @@
-package com.flowlinx.fix.server.resource.representation;
+package com.flowlinx.fix.server.representation;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
-import quickfix.Application;
 import quickfix.StringField;
-import quickfix.UtcTimestampPrecision;
 import quickfix.field.ApplVerID;
 import quickfix.field.DefaultApplVerID;
 

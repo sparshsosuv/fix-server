@@ -16,13 +16,11 @@ CREATE TABLE messages (
     session_qualifier VARCHAR(64)   NOT NULL,
     msgseqnum         INT           NOT NULL,
     message           VARCHAR(2048) NOT NULL,
-    PRIMARY KEY (beginstring, sendercompid, sendersubid, senderlocid,
-                 targetcompid, targetsubid, targetlocid, session_qualifier,
-                 msgseqnum)
+    PRIMARY KEY(time, beginstring)
 );
 
 CREATE TABLE log_income_messages (
-    time              TIMESTAMP     NOT NULL,
+    time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     beginstring       VARCHAR(8)    NOT NULL,
     sendercompid      VARCHAR(64)   NOT NULL,
     sendersubid       VARCHAR(64)   NOT NULL,
@@ -37,7 +35,7 @@ CREATE TABLE log_income_messages (
 );
 
 CREATE TABLE log_outgoing_messages (
-    time              TIMESTAMP     NOT NULL,
+    time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     beginstring       VARCHAR(8)    NOT NULL,
     sendercompid      VARCHAR(64)   NOT NULL,
     sendersubid       VARCHAR(64)   NOT NULL,
@@ -52,7 +50,7 @@ CREATE TABLE log_outgoing_messages (
 );
 
 CREATE TABLE log_events (
-    time              TIMESTAMP     NOT NULL,
+    time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     beginstring       VARCHAR(8)    NOT NULL,
     sendercompid      VARCHAR(64)   NOT NULL,
     sendersubid       VARCHAR(64)   NOT NULL,
@@ -77,6 +75,5 @@ CREATE TABLE sessions (
     creation_time     TIMESTAMP   NOT NULL,
     incoming_seqnum   INT         NOT NULL,
     outgoing_seqnum   INT         NOT NULL,
-    PRIMARY KEY (beginstring, sendercompid, sendersubid, senderlocid,
-                 targetcompid, targetsubid, targetlocid, session_qualifier)
+    PRIMARY KEY (creation_time, beginstring)
 );

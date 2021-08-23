@@ -4,17 +4,22 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 import org.dozer.classmap.CopyByReference;
 import org.dozer.classmap.MappingFileData;
 import org.dozer.loader.api.BeanMappingBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Configuration
 public class BeansConfig {
@@ -57,6 +62,14 @@ public class BeansConfig {
                 return data;
             }
         };
+    }
+
+    @Autowired
+    private void registerSerializersDeserializers(List<ObjectMapper> objectMappers) {
+        SimpleModule simpleModule = new SimpleModule();
+        simpleModule.addSerializer(LocalDateTime.class, LocalDateTimeSerializer.INSTANCE);
+        simpleModule.addDeserializer(LocalDateTime.class, LocalDateTimeDeserializer.INSTANCE);
+        objectMappers.forEach(objectMapper -> objectMapper.registerModule(simpleModule));
     }
 
 }
