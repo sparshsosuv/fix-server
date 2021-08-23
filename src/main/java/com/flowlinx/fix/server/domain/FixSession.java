@@ -17,7 +17,7 @@ public class FixSession implements Serializable {
 
     @Id
     @Column(name = "creation_time")
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm::ss.SSS")
     private LocalDateTime time;
 
     @Id

@@ -17,7 +17,7 @@ public class FixIncomeMessage implements FixEntity {
 
     @Id
     @Column(name = "time")
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm::ss.SSS")
     private LocalDateTime time;
 
     @Id
