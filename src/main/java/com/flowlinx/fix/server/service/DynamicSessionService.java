@@ -15,7 +15,11 @@ import quickfix.field.TargetCompID;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.stream.Collectors;
+
+import static quickfix.SessionSettings.*;
 
 @Slf4j
 @Service
@@ -30,6 +34,9 @@ public class DynamicSessionService {
 
     @Autowired
     private DynamicSessionRepository repository;
+
+    @Autowired
+    private SessionFactory sessionFactory;
 
     public void create( CreateSessionRepresentation sessionRepresentation ) {
         DynamicSession session = mapper.map( sessionRepresentation, DynamicSession.class );
@@ -53,8 +60,7 @@ public class DynamicSessionService {
             for (CreateSessionRepresentation sessionRepresentation : sessionsRepresentation) {
                 SessionID sessionID = new SessionID(new BeginString(sessionRepresentation.getBeginString()),
                         new SenderCompID(sessionRepresentation.getSenderCompID()),
-                        new TargetCompID(sessionRepresentation.getTargetCompID()),
-                        "Session " + System.currentTimeMillis() );
+                        new TargetCompID(sessionRepresentation.getTargetCompID()));
 
                 Dictionary dictionary = new Dictionary();
 
@@ -75,24 +81,31 @@ public class DynamicSessionService {
                 dictionary.setString("TargetCompID", sessionRepresentation.getTargetCompID());
                 dictionary.setString("ResetOnDisconnect", sessionRepresentation.getResetOnDisconnect());
                 dictionary.setString("ResetOnLogout", sessionRepresentation.getResetOnLogout());
-                dictionary.setString("DataDictionary", sessionRepresentation.getDataDictionary());
-
-                //dictionary.setString("FileLogPath", "Log");
-                //dictionary.setString("FileStorePath", "c:\fixfiles");
 
                 socketAcceptor.getSettings().set(sessionID, dictionary);
 
-            }
+                SessionSettings dynamicSettings = new SessionSettings();
+                copySettings(dynamicSettings, socketAcceptor.getSettings().getDefaultProperties());
+                dynamicSettings.setString(BEGINSTRING, sessionRepresentation.getBeginString());
+                dynamicSettings.setString(SENDERCOMPID, sessionRepresentation.getSenderCompID());
+                dynamicSettings.setString(TARGETCOMPID, sessionRepresentation.getTargetCompID());
 
-            if( restartSocketAcceptor ) {
-                socketAcceptor.stop();
-                socketAcceptor.start();
+                Session s = sessionFactory.create(sessionID, dynamicSettings);
+                if (socketAcceptor != null) {
+                    socketAcceptor.addDynamicSession(s);
+                }
             }
 
             log.info("Dynamic sessions added successfully");
 
         } catch ( Exception e ) {
             log.error( String.format( "Error on creating fix session: %s", e.getMessage()));
+        }
+    }
+
+    protected void copySettings(SessionSettings settings, Properties properties) {
+        for (Map.Entry<Object, Object> e : properties.entrySet()) {
+            settings.setString((String) e.getKey(), e.getValue().toString());
         }
     }
 }

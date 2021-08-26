@@ -41,4 +41,10 @@ public class FixConfig {
 		return new JdbcLogFactory(serverSessionSettings);
 	}
 
+	@Bean
+	public SessionFactory sessionFactory(ServerApplicationAdapter serverApplication, MessageStoreFactory serverMessageStoreFactory,
+										 LogFactory serverLogFactory, MessageFactory serverMessageFactory) {
+		return new DefaultSessionFactory(serverApplication, serverMessageStoreFactory, serverLogFactory, serverMessageFactory);
+	}
+
 }
