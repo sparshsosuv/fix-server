@@ -23,7 +23,7 @@ public class ClientRoutingHandler implements ApplicationListener<ClientEvent> {
         final Message message = event.getMessage();
 
         try {
-            final String flxTargetCompId = message.getString(FixConstants.FLX_TARGET_COMP_ID );
+            final String flxTargetCompId = message.getString( FixConstants.FLX_TARGET_COMP_ID );
             message.removeField( FixConstants.FLX_TARGET_COMP_ID );
             final Optional<FixTargetSession> opt = FixTargetSession.from( flxTargetCompId );
 

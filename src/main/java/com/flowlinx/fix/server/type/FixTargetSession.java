@@ -7,8 +7,11 @@ import java.util.Optional;
 
 @Getter
 public enum FixTargetSession {
-    FLX_SIMULATOR( FixSenderSession.FLX_SERVER),
-    RECAUAT( FixSenderSession.FLOWLINXUAT );
+    FLX_SIMULATOR( FixSenderSession.FLX_SERVER ),
+    RECAUAT( FixSenderSession.FLOWLINXUAT ),
+
+    //prod
+    RENCAP( FixSenderSession.FLOWLINX );
 
     FixSenderSession sender;
 

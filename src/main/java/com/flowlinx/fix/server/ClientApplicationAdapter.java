@@ -82,10 +82,10 @@ public class ClientApplicationAdapter extends MessageCracker implements Applicat
                 .filter(t -> t.name().equalsIgnoreCase( sessionID.getTargetCompID() ) ).findFirst();
 
             if( optSession.isPresent() ){
-            publisher.publishEvent( new WorkflowEvent( message, sessionID ) );
+            publisher.publishEvent( new WorkflowEvent( message ) );
 
         } else {
-            publisher.publishEvent( new ClientEvent( message, sessionID ) );
+            publisher.publishEvent( new ClientEvent( message ) );
         }
 
     }
