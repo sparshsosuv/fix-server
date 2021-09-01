@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+    <property name="LOG_LOCATION" value="/opt/flowlinx/logs/" />
+
+    <appender name="ROOT_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_LOCATION:-.}/flowlinx-fix-server.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_LOCATION:-.}/flowlinx-fix-server-%d{yyyy-MM-dd-hh:mm:ss}.zip</fileNamePattern>
+            <maxHistory>14</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <immediateFlush>true</immediateFlush>
+            <pattern>%date{ISO8601} %-5level [%-16thread] %logger{40} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ROOT_FILE_ASYNC_APPENDER" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>1000</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <appender-ref ref="ROOT_FILE"/>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date{ISO8601} %-5level [%-16thread] %logger{40} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="ROOT_FILE_ASYNC_APPENDER"/>
+    </root>
+
+</configuration>

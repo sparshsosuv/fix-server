@@ -25,6 +25,7 @@ dist/
 
 # JetBrains IDE
 .idea/
+flowlinx-fix-server.iml
 
 # Unit test reports
 TEST*.xml
@@ -39,6 +40,7 @@ Thumbs.db
 *.app
 *.exe
 *.war
+/logs/*
 
 # Large media files
 *.mp4
