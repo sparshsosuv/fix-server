@@ -2,18 +2,16 @@ package com.flowlinx.fix.server.message.event;
 
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
-import quickfix.SessionID;
+import quickfix.fix44.Message;
 
 @Getter
 public class ClientEvent extends ApplicationEvent {
 
-    private quickfix.fix44.Message message;
-    private SessionID sessionID;
+    private Message message;
 
-    public ClientEvent(quickfix.fix44.Message message, SessionID sessionID) {
+    public ClientEvent(Message message) {
         super(message);
         this.message = message;
-        this.sessionID = sessionID;
     }
 
 }

@@ -1,7 +1,7 @@
 package com.flowlinx.fix.server.resource;
 
-import com.flowlinx.fix.server.resource.representation.FixSessionIdRepresentation;
-import com.flowlinx.fix.server.resource.representation.FixSessionRepresentation;
+import com.flowlinx.fix.server.representation.FixSessionIdRepresentation;
+import com.flowlinx.fix.server.representation.FixSessionRepresentation;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

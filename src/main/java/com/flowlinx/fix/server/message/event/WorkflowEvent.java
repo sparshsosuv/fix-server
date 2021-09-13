@@ -8,13 +8,11 @@ import quickfix.fix44.Message;
 @Getter
 public class WorkflowEvent extends ApplicationEvent {
 
-    private quickfix.fix44.Message message;
-    private SessionID sessionID;
+    private Message message;
 
-    public WorkflowEvent(Message message, SessionID sessionID) {
+    public WorkflowEvent(Message message) {
         super(message);
         this.message = message;
-        this.sessionID = sessionID;
     }
 
 

@@ -1,5 +1,6 @@
 package com.flowlinx.fix.server.message.event.handler;
 
+import com.flowlinx.fix.server.utils.FixConstants;
 import com.flowlinx.fix.server.message.event.ClientEvent;
 import com.flowlinx.fix.server.type.FixTargetSession;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Component;
 import quickfix.FieldNotFound;
 import quickfix.Session;
 import quickfix.SessionNotFound;
-import quickfix.field.DeliverToCompID;
 import quickfix.fix44.Message;
 
 import java.util.Optional;
@@ -23,12 +23,12 @@ public class ClientRoutingHandler implements ApplicationListener<ClientEvent> {
         final Message message = event.getMessage();
 
         try {
-            final String deliverToCompID = message.getHeader().getString( DeliverToCompID.FIELD );
-
-            final Optional<FixTargetSession> opt = FixTargetSession.from( deliverToCompID );
+            final String flxTargetCompId = message.getString( FixConstants.FLX_TARGET_COMP_ID );
+            message.removeField( FixConstants.FLX_TARGET_COMP_ID );
+            final Optional<FixTargetSession> opt = FixTargetSession.from( flxTargetCompId );
 
             if( opt.isPresent() ) {
-                Session.sendToTarget( message, opt.get().getSender().name(), deliverToCompID );
+                Session.sendToTarget( message, opt.get().getSender().name(), flxTargetCompId );
             }
 
         } catch (FieldNotFound | SessionNotFound e) {

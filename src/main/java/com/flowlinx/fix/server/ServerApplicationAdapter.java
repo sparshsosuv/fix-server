@@ -78,14 +78,14 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
 
     private void publishEvent(quickfix.fix44.Message message, SessionID sessionID) {
 
-        final Optional<FixTargetSession> optSession = Arrays.stream(FixTargetSession.values())
+        final Optional<FixTargetSession> optSession = Arrays.stream( FixTargetSession.values() )
                 .filter(t -> t.name().equalsIgnoreCase( sessionID.getTargetCompID() ) ).findFirst();
 
         if( optSession.isPresent() ){
-            publisher.publishEvent( new WorkflowEvent( message, sessionID ) );
+            publisher.publishEvent( new WorkflowEvent( message ) );
 
         } else {
-            publisher.publishEvent( new ClientEvent( message, sessionID ) );
+            publisher.publishEvent( new ClientEvent( message ) );
         }
 
     }

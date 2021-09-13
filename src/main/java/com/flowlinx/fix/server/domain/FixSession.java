@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 
 @Data @AllArgsConstructor @NoArgsConstructor
 @Entity
-@Table( name = "messages")
-@IdClass(FixMessage.PK.class)
-public class FixMessage implements Serializable {
+@Table( name = "sessions")
+@IdClass(FixSession.PK.class)
+public class FixSession implements Serializable {
 
     @Id
-    @Column(name = "time")
+    @Column(name = "creation_time")
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm::ss.SSS")
     private LocalDateTime time;
 
@@ -47,11 +47,11 @@ public class FixMessage implements Serializable {
     @Column(name = "session_qualifier")
     private String sessionqualifier;
 
-    @Column(name = "msgseqnum")
-    private Integer msgseqnum;
+    @Column(name = "incoming_seqnum")
+    private Integer incomingSeqnum;
 
-    @Column(name = "message")
-    private String text;
+    @Column(name = "outgoing_seqnum")
+    private Integer outgoingSeqnum;
 
     @Data
     public static class PK implements Serializable {

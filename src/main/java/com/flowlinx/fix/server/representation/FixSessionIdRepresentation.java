@@ -1,4 +1,4 @@
-package com.flowlinx.fix.server.resource.representation;
+package com.flowlinx.fix.server.representation;
 
 import lombok.*;
 
@@ -16,5 +16,6 @@ public class FixSessionIdRepresentation implements Serializable {
     private String targetCompID;
     private String targetSubID;
     private String targetLocationID;
-    private String sessionQualifier;    
+    private String sessionQualifier;
+    private String connectionType;
 }

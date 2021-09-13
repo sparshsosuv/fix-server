@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 
 @Data @AllArgsConstructor @NoArgsConstructor
 @Entity
-@Table( name = "messages")
-@IdClass(FixMessage.PK.class)
-public class FixMessage implements Serializable {
+@Table( name = "log_events")
+@IdClass(FixLogEvent.PK.class)
+public class FixLogEvent implements FixEntity {
 
     @Id
     @Column(name = "time")
@@ -47,11 +47,11 @@ public class FixMessage implements Serializable {
     @Column(name = "session_qualifier")
     private String sessionqualifier;
 
-    @Column(name = "msgseqnum")
-    private Integer msgseqnum;
-
-    @Column(name = "message")
+    @Column(name = "text")
     private String text;
+
+    @Transient
+    private String msgType;
 
     @Data
     public static class PK implements Serializable {

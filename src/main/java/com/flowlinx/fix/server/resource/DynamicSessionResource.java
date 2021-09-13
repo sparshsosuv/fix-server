@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @CrossOrigin(maxAge = 3600)
 @Controller
-@RequestMapping(value = "/fix/session")
+@RequestMapping(value = "/fix/dynamic/session")
 public class DynamicSessionResource {
 
     @Autowired
