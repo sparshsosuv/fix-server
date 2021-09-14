@@ -1,7 +1,7 @@
 package com.flowlinx.fix.server.config;
 
-import com.flowlinx.fix.server.ClientApplicationAdapter;
-import com.flowlinx.fix.server.ServerApplicationAdapter;
+import com.flowlinx.fix.server.fix.ClientApplicationAdapter;
+import com.flowlinx.fix.server.fix.ServerApplicationAdapter;
 import io.allune.quickfixj.spring.boot.starter.EnableQuickFixJClient;
 import io.allune.quickfixj.spring.boot.starter.EnableQuickFixJServer;
 import org.springframework.context.annotation.Bean;

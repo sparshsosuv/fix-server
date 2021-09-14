@@ -1,23 +1,24 @@
 package com.flowlinx.fix.server.resource;
 
-import com.flowlinx.fix.server.FixSessionBuilder;
+import com.flowlinx.fix.server.fix.FixSessionBuilder;
 import com.flowlinx.fix.server.representation.FixSessionIdRepresentation;
 import com.flowlinx.fix.server.representation.FixSessionRepresentation;
+import com.flowlinx.fix.server.utils.AppConstants;
 import com.flowlinx.fix.server.utils.FixConstants;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import quickfix.*;
-import quickfix.mina.IoSessionResponder;
 import quickfix.mina.SessionConnector;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
+@Secured(AppConstants.ROLE_ADMIN)
 @CrossOrigin(maxAge = 3600)
 @RestController
 @RequestMapping(value = "/fix/session")

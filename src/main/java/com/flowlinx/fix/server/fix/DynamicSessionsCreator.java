@@ -1,4 +1,4 @@
-package com.flowlinx.fix.server;
+package com.flowlinx.fix.server.fix;
 
 import com.flowlinx.fix.server.resource.representation.CreateSessionRepresentation;
 import com.flowlinx.fix.server.service.DynamicSessionService;
