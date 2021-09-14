@@ -3,6 +3,7 @@ package com.flowlinx.fix.server.config.security.provider;
 import com.flowlinx.fix.server.config.security.Profile;
 import com.flowlinx.fix.server.integration.AuthProviderApiClient;
 import com.flowlinx.fix.server.integration.dto.AuthProviderLoginResponseDTO;
+import com.flowlinx.fix.server.type.Authority;
 import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -31,6 +32,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
       try {
 
          final AuthProviderLoginResponseDTO response = authProviderApiClient.login( login, password );
+
+         if( !response.getAuthorities().contains( Authority.ROLE_ADMIN ) ){
+            throw new BadCredentialsException("invalid credentials");
+         }
 
          final List<SimpleGrantedAuthority> authorities = response.getAuthorities().stream()
                  .map( a -> new SimpleGrantedAuthority( a.name() ) )
