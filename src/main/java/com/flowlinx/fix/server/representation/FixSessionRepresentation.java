@@ -22,10 +22,8 @@ public class FixSessionRepresentation implements Serializable {
     private int expectedTargetNum;
     private Date startTime;
     private String remoteAddress;
-    private String responderRemoteAddress;
     private int logonTimeout;
     private int logoutTimeout;
-
 
     private boolean enabled;
     private long lastSessionTimeCheck;
@@ -44,10 +42,7 @@ public class FixSessionRepresentation implements Serializable {
     private boolean redundantResentRequestsAllowed;
     private boolean persistMessages;
     private boolean checkCompID;
-    private boolean useClosedRangeForResend;
     private boolean disableHeartBeatCheck;
-    private boolean rejectGarbledMessage;
-    private boolean rejectInvalidMessage;
     private boolean rejectMessageOnUnhandledException;
     private boolean requiresOrigSendingTime;
     private boolean forceResendWhenCorruptedStore;
@@ -55,15 +50,17 @@ public class FixSessionRepresentation implements Serializable {
     private boolean enableLastMsgSeqNumProcessed;
     private boolean validateChecksum;
     private int maxScheduledWriteRequests;
-    private AtomicBoolean isResetting;
-    private AtomicBoolean isResettingState;
-    private AtomicReference<ApplVerID> targetDefaultApplVerID;
-    private DefaultApplVerID senderDefaultApplVerID;
     private boolean validateSequenceNumbers;
     private boolean validateIncomingMessage;
     private int[] logonIntervals;
-    private Set<InetAddress> allowedRemoteAddresses;
-    private List<StringField> logonTags;
+
+    private String validateFieldsOutOfOrder;
+    private String validateFieldsHaveValue;
+    private String validateUserDefinedFields;
+    private Integer socketAcceptPort;
+
+    private String socketConnectHost;
+    private Integer socketConnectPort;
     
 
 }

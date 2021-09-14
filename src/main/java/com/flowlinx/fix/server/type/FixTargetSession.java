@@ -9,6 +9,7 @@ import java.util.Optional;
 public enum FixTargetSession {
     FLX_SIMULATOR( FixSenderSession.FLX_SERVER ),
     RECAUAT( FixSenderSession.FLOWLINXUAT ),
+    JKSTOCKUAT( FixSenderSession.FLOWLINXUAT ),
 
     //prod
     RENCAP( FixSenderSession.FLOWLINX );

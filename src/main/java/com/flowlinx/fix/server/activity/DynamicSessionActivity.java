@@ -14,9 +14,7 @@ public class DynamicSessionActivity {
     private DynamicSessionService service;
 
     public void create( CreateSessionRepresentation sessionRepresentation ) {
-
         service.create( sessionRepresentation );
-
     }
 
 }

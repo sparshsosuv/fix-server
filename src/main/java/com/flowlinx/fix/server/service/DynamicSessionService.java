@@ -38,12 +38,12 @@ public class DynamicSessionService {
     @Autowired
     private SessionFactory sessionFactory;
 
-    public void create( CreateSessionRepresentation sessionRepresentation ) {
-        DynamicSession session = mapper.map( sessionRepresentation, DynamicSession.class );
+    public void create( CreateSessionRepresentation item ) {
+        final DynamicSession session = mapper.map( item, DynamicSession.class );
 
         repository.save( session );
 
-        addDynamicSessions( Arrays.asList( sessionRepresentation ), true );
+        addDynamicSessions( Arrays.asList( item ), true );
 
     }
 
@@ -63,7 +63,6 @@ public class DynamicSessionService {
                         new TargetCompID(sessionRepresentation.getTargetCompID()));
 
                 Dictionary dictionary = new Dictionary();
-
                 dictionary.setString("ConnectionType", sessionRepresentation.getConnectionType());
                 dictionary.setString("StartTime", sessionRepresentation.getStartTime());
                 dictionary.setString("EndTime", sessionRepresentation.getEndTime());
@@ -84,21 +83,20 @@ public class DynamicSessionService {
 
                 socketAcceptor.getSettings().set(sessionID, dictionary);
 
-                SessionSettings dynamicSettings = new SessionSettings();
-                copySettings(dynamicSettings, socketAcceptor.getSettings().getDefaultProperties());
-                dynamicSettings.setString(BEGINSTRING, sessionRepresentation.getBeginString());
-                dynamicSettings.setString(SENDERCOMPID, sessionRepresentation.getSenderCompID());
-                dynamicSettings.setString(TARGETCOMPID, sessionRepresentation.getTargetCompID());
+                final SessionSettings settings = new SessionSettings();
+                copySettings(settings, socketAcceptor.getSettings().getDefaultProperties());
+                settings.setString(BEGINSTRING, sessionRepresentation.getBeginString());
+                settings.setString(SENDERCOMPID, sessionRepresentation.getSenderCompID());
+                settings.setString(TARGETCOMPID, sessionRepresentation.getTargetCompID());
 
-                Session s = sessionFactory.create(sessionID, dynamicSettings);
-                if (socketAcceptor != null) {
-                    socketAcceptor.addDynamicSession(s);
-                }
+                final Session session = sessionFactory.create(sessionID, settings);
+                socketAcceptor.addDynamicSession( session );
             }
 
             log.info("Dynamic sessions added successfully");
 
         } catch ( Exception e ) {
+            e.printStackTrace();
             log.error( String.format( "Error on creating fix session: %s", e.getMessage()));
         }
     }

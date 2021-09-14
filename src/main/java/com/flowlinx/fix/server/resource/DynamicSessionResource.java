@@ -19,10 +19,8 @@ public class DynamicSessionResource {
     private DynamicSessionActivity activity;
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody CreateSessionRepresentation sessionRepresentation) {
-
-        activity.create( sessionRepresentation );
-
+    public ResponseEntity<Void> create(@RequestBody CreateSessionRepresentation item) {
+        activity.create( item );
         return ResponseEntity.ok().build();
     }
 }
