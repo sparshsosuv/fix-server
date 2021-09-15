@@ -1,7 +1,7 @@
 package com.flowlinx.fix.server.config;
 
-import com.flowlinx.fix.server.ClientApplicationAdapter;
-import com.flowlinx.fix.server.ServerApplicationAdapter;
+import com.flowlinx.fix.server.fix.ClientApplicationAdapter;
+import com.flowlinx.fix.server.fix.ServerApplicationAdapter;
 import io.allune.quickfixj.spring.boot.starter.EnableQuickFixJClient;
 import io.allune.quickfixj.spring.boot.starter.EnableQuickFixJServer;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +14,7 @@ import quickfix.*;
 public class FixConfig {
 
 	@Bean
-	public Acceptor serverAcceptor(ServerApplicationAdapter serverApplication, MessageStoreFactory serverMessageStoreFactory,
+	public ThreadedSocketAcceptor serverAcceptor(ServerApplicationAdapter serverApplication, MessageStoreFactory serverMessageStoreFactory,
 								   SessionSettings serverSessionSettings, LogFactory serverLogFactory,
 								   MessageFactory serverMessageFactory) throws ConfigError {
 
@@ -23,7 +23,7 @@ public class FixConfig {
 	}
 
 	@Bean
-	public Initiator clientInitiator(ClientApplicationAdapter clientApplicationAdapter, MessageStoreFactory clientMessageStoreFactory,
+	public ThreadedSocketInitiator clientInitiator(ClientApplicationAdapter clientApplicationAdapter, MessageStoreFactory clientMessageStoreFactory,
 									 SessionSettings clientSessionSettings, LogFactory clientLogFactory,
 									 MessageFactory clientMessageFactory) throws ConfigError {
 
@@ -39,6 +39,12 @@ public class FixConfig {
 	@Bean
 	public LogFactory serverLogFactory(SessionSettings serverSessionSettings) {
 		return new JdbcLogFactory(serverSessionSettings);
+	}
+
+	@Bean
+	public SessionFactory sessionFactory(ServerApplicationAdapter serverApplication, MessageStoreFactory serverMessageStoreFactory,
+										 LogFactory serverLogFactory, MessageFactory serverMessageFactory) {
+		return new DefaultSessionFactory(serverApplication, serverMessageStoreFactory, serverLogFactory, serverMessageFactory);
 	}
 
 }

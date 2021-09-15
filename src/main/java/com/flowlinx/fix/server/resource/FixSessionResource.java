@@ -1,23 +1,24 @@
 package com.flowlinx.fix.server.resource;
 
-import com.flowlinx.fix.server.FixSessionBuilder;
+import com.flowlinx.fix.server.fix.FixSessionBuilder;
 import com.flowlinx.fix.server.representation.FixSessionIdRepresentation;
 import com.flowlinx.fix.server.representation.FixSessionRepresentation;
+import com.flowlinx.fix.server.utils.AppConstants;
 import com.flowlinx.fix.server.utils.FixConstants;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
-import quickfix.Acceptor;
-import quickfix.Initiator;
-import quickfix.Session;
-import quickfix.SessionID;
+import quickfix.*;
+import quickfix.mina.SessionConnector;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Properties;
 
+@Secured(AppConstants.ROLE_ADMIN)
 @CrossOrigin(maxAge = 3600)
 @RestController
 @RequestMapping(value = "/fix/session")
@@ -27,10 +28,10 @@ public class FixSessionResource {
     private Mapper mapper;
 
     @Autowired
-    private Acceptor acceptor;
+    private ThreadedSocketAcceptor acceptor;
 
     @Autowired
-    private Initiator initiator;
+    private ThreadedSocketInitiator initiator;
 
     @Autowired
     private FixSessionBuilder builder;
@@ -59,15 +60,20 @@ public class FixSessionResource {
     @GetMapping( value = {"/{connectionType}/{sessionID}"})
     public ResponseEntity<FixSessionRepresentation> getSession(
             @PathVariable(value = "connectionType") String connectionType,
-            @PathVariable(value = "sessionID") String id ) throws IOException {
+            @PathVariable(value = "sessionID") String id ) throws IOException, ConfigError {
 
-        final List<SessionID> sessions = FixConstants.CONNECTION_TYPE_ACCEPTOR.equalsIgnoreCase( connectionType )
-                ? acceptor.getSessions() : initiator.getSessions();
+        final SessionConnector connector = FixConstants.CONNECTION_TYPE_ACCEPTOR.equalsIgnoreCase( connectionType )
+                ? acceptor : initiator;
+
+        final List<SessionID> sessions = connector.getSessions();
 
         for( SessionID sessionID : sessions ){
             if( sessionID.getTargetCompID().endsWith( id ) ){
                 final Session session = Session.lookupSession( sessionID );
-                return ResponseEntity.ok( builder.build( sessionID, session ) );
+
+                final Properties properties = connector.getSettings().getSessionProperties( sessionID );
+
+                return ResponseEntity.ok( builder.build( sessionID, session, properties ) );
             }
         }
 

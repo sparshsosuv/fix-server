@@ -4,6 +4,7 @@ import com.flowlinx.fix.server.domain.EntityFilter;
 import com.flowlinx.fix.server.domain.FixLogEvent;
 import com.flowlinx.fix.server.representation.PageRepresentation;
 import com.flowlinx.fix.server.service.FixLogEventService;
+import com.flowlinx.fix.server.utils.AppConstants;
 import com.flowlinx.fix.server.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,11 +13,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+@Secured(AppConstants.ROLE_ADMIN)
 @CrossOrigin(maxAge = 3600)
 @RestController
 @RequestMapping(value = "/event")
