@@ -17,14 +17,16 @@ public class FixOutgoingMessageService extends AbstractBaseService<FixOutgoingMe
 
    	@Override
 	public Specification<FixOutgoingMessage> specificationByFilter(EntityFilter<FixOutgoingMessage> filter) {
-		Specification<FixOutgoingMessage> spec = notNull();
+		Specification<FixOutgoingMessage> spec = notNull("time");
 
 		if( filter.getCondition() != null ) {
 			final String sendercompid = filter.getCondition().getSendercompid();
 			final String targetcompid = filter.getCondition().getTargetcompid();
+			final String text = filter.getCondition().getText();
 
 			spec = ( sendercompid != null ) ? ilike( "sendercompid", sendercompid ) : spec;
 			spec = ( targetcompid != null ) ? spec.or( ilike( "targetcompid", targetcompid ) ) : spec;
+			spec = ( text != null ) ? ilike( "text", text ).and( spec ) : spec;
 		}
 
       	return spec;

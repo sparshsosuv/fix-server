@@ -1,73 +1,55 @@
 package com.flowlinx.fix.server.fix;
 
+import com.flowlinx.fix.server.domain.RoutingTable;
+import com.flowlinx.fix.server.message.event.ClientEvent;
+import com.flowlinx.fix.server.message.event.RouteEvent;
+import com.flowlinx.fix.server.message.event.WorkflowEvent;
 import com.flowlinx.fix.server.service.RoutingTableService;
+import com.flowlinx.fix.server.type.FixTargetSession;
+import com.flowlinx.fix.server.utils.AppUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import quickfix.*;
+import quickfix.field.DeliverToCompID;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 @Slf4j
 @Component
-public class ServerApplicationAdapter extends MessageCracker implements Application {
+public class FixSessionRouter {
 
     @Autowired
     private RoutingTableService routingTableService;
 
-    @Override
-    public void fromAdmin(Message message, SessionID sessionId)
-            throws FieldNotFound, IncorrectDataFormat, IncorrectTagValue, RejectLogon {
-        log.info("fromAdmin: Message={}, SessionId={}", message, sessionId);
-    }
+    @Autowired
+    private ApplicationEventPublisher publisher;
 
-    @Override
-    public void toAdmin(Message message, SessionID sessionId) {
-        log.info("toAdmin: Message={}, SessionId={}", message, sessionId);
-    }
+    public void route(Message message, SessionID sessionID) {
 
-    @Override
-    public void fromApp(Message message, SessionID sessionId)
-            throws FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType {
-        crack(message, sessionId);
-    }
+        final String deliverToCompId = AppUtils.getString( message.getHeader(), DeliverToCompID.FIELD );
 
-    @Override
-    public void toApp(Message message, SessionID sessionId) throws DoNotSend {
-        log.info("toApp: Message={}, SessionId={}", message, sessionId);
-    }
+        final Optional<RoutingTable> opt = routingTableService.findByDeliverToCompID( deliverToCompId );
 
-    @Override
-    public void onCreate(SessionID sessionId) {
-        log.info("onCreate: SessionId={}", sessionId);
-    }
+        if( opt.isPresent() ) {
+            publisher.publishEvent( new RouteEvent( message, opt.get() ) );
 
-    @Override
-    public void onLogon(SessionID sessionId) {
-        log.info("onLogon: SessionId={}", sessionId);
-    }
+        } else {
 
-    @Override
-    public void onLogout(SessionID sessionId) {
-        log.info("onLogout: SessionId={}", sessionId);
-    }
+            final Optional<FixTargetSession> optSession = Arrays.stream( FixTargetSession.values() )
+                    .filter( t -> t.name().equalsIgnoreCase( sessionID.getTargetCompID() ) )
+                    .findFirst();
 
-    @Handler
-    public void executionReport(quickfix.fix44.ExecutionReport message, SessionID sessionID) {
-        routingTableService.route( message, sessionID );
-    }
+            if( optSession.isPresent() ){
+                publisher.publishEvent( new WorkflowEvent( message ) );
 
-    @Handler
-    public void newOrderHandler(quickfix.fix44.NewOrderSingle message, SessionID sessionID) {
-        routingTableService.route( message, sessionID );
-    }
+            } else {
+                publisher.publishEvent( new ClientEvent( message ) );
+            }
 
-    @Handler
-    public void replaceOrder(quickfix.fix44.OrderCancelReplaceRequest message, SessionID sessionID) {
-        routingTableService.route( message, sessionID );
-    }
-
-    @Handler
-    public void cancelOrder(quickfix.fix44.OrderCancelRequest message, SessionID sessionID) {
-        routingTableService.route( message, sessionID );
+        }
     }
 
 }

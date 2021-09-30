@@ -1,38 +1,32 @@
 package com.flowlinx.fix.server.message.event.handler;
 
-import com.flowlinx.fix.server.utils.FixConstants;
-import com.flowlinx.fix.server.message.event.ClientEvent;
+import com.flowlinx.fix.server.domain.RoutingTable;
+import com.flowlinx.fix.server.message.event.RouteEvent;
 import com.flowlinx.fix.server.type.FixTargetSession;
+import com.flowlinx.fix.server.utils.AppUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
-import quickfix.FieldNotFound;
+import quickfix.Message;
 import quickfix.Session;
-import quickfix.SessionNotFound;
-import quickfix.fix44.Message;
+import quickfix.field.SenderCompID;
 
 import java.util.Optional;
 
 @Slf4j
 @Component
-public class ClientRoutingHandler implements ApplicationListener<ClientEvent> {
+public class RouteEventHandler implements ApplicationListener<RouteEvent> {
 
     @Override
-    public void onApplicationEvent(ClientEvent event) {
+    public void onApplicationEvent(RouteEvent event) {
 
-        final Message message = event.getMessage();
+        try{
+            final Message message = event.getMessage();
+            final RoutingTable route = event.getRoutingTable();
+            Session.sendToTarget( message, route.getSenderCompID(), route.getTargetCompID() );
 
-        try {
-            final String flxTargetCompId = message.getString( FixConstants.FLX_TARGET_COMP_ID );
-            message.removeField( FixConstants.FLX_TARGET_COMP_ID );
-            final Optional<FixTargetSession> opt = FixTargetSession.from( flxTargetCompId );
-
-            if( opt.isPresent() ) {
-                Session.sendToTarget( message, opt.get().getSender().name(), flxTargetCompId );
-            }
-
-        } catch (FieldNotFound | SessionNotFound e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();;
         }
 
     }

@@ -1,30 +1,36 @@
 package com.flowlinx.fix.server.service;
 
 import com.flowlinx.fix.server.domain.EntityFilter;
-import com.flowlinx.fix.server.domain.FixLogEvent;
-import com.flowlinx.fix.server.repository.FixLogEventRepository;
+import com.flowlinx.fix.server.domain.RoutingTable;
+import com.flowlinx.fix.server.repository.RoutingTableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
-public class FixLogEventService extends AbstractBaseService<FixLogEvent>{
+public class RoutingTableService extends AbstractBaseService<RoutingTable>{
+
+	private final RoutingTableRepository repo;
 
 	@Autowired
-	public FixLogEventService(FixLogEventRepository repository) {
-		super(repository);
+	public RoutingTableService(RoutingTableRepository repo) {
+		super(repo);
+		this.repo = repo;
+	}
+
+	public Optional<RoutingTable> findByDeliverToCompID( String deliverToCompId ){
+		return repo.findByDeliverToCompID( deliverToCompId );
 	}
 
    	@Override
-	public Specification<FixLogEvent> specificationByFilter(EntityFilter<FixLogEvent> filter) {
-		Specification<FixLogEvent> spec = notNull();
+	public Specification<RoutingTable> specificationByFilter(EntityFilter<RoutingTable> filter) {
+		Specification<RoutingTable> spec = notNull("id");
 
-		if( filter.getCondition() != null ) {
-			final String sendercompid = filter.getCondition().getSendercompid();
-			final String targetcompid = filter.getCondition().getTargetcompid();
-
-			spec = ( sendercompid != null ) ? ilike( "sendercompid", sendercompid ) : spec;
-			spec = ( targetcompid != null ) ? spec.or( ilike( "targetcompid", targetcompid ) ) : spec;
+		if( filter.getCondition() != null && filter.getCondition().getDeliverToCompID() != null ) {
+			final String deliverToCompID = filter.getCondition().getDeliverToCompID();
+			spec = ( deliverToCompID != null ) ? ilike( "deliverToCompID", deliverToCompID ) : spec;
 		}
 
       	return spec;

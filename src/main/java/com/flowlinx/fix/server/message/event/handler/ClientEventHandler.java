@@ -7,15 +7,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import quickfix.FieldNotFound;
+import quickfix.Message;
 import quickfix.Session;
 import quickfix.SessionNotFound;
-import quickfix.fix44.Message;
 
 import java.util.Optional;
 
 @Slf4j
 @Component
-public class ClientRoutingHandler implements ApplicationListener<ClientEvent> {
+public class ClientEventHandler implements ApplicationListener<ClientEvent> {
 
     @Override
     public void onApplicationEvent(ClientEvent event) {

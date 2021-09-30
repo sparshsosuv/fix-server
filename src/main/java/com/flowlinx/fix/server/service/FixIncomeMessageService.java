@@ -17,14 +17,16 @@ public class FixIncomeMessageService extends AbstractBaseService<FixIncomeMessag
 
    	@Override
 	public Specification<FixIncomeMessage> specificationByFilter(EntityFilter<FixIncomeMessage> filter) {
-		Specification<FixIncomeMessage> spec = notNull();
+		Specification<FixIncomeMessage> spec = notNull("time");
 
 		if( filter.getCondition() != null ) {
 			final String sendercompid = filter.getCondition().getSendercompid();
 			final String targetcompid = filter.getCondition().getTargetcompid();
+			final String text = filter.getCondition().getText();
 
 			spec = ( sendercompid != null ) ? ilike( "sendercompid", sendercompid ) : spec;
 			spec = ( targetcompid != null ) ? spec.or( ilike( "targetcompid", targetcompid ) ) : spec;
+			spec = ( text != null ) ? ilike( "text", text ).and( spec ) : spec;
 		}
 
       	return spec;

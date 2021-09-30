@@ -1,9 +1,10 @@
 package com.flowlinx.fix.server.utils;
 
 import com.flowlinx.fix.server.domain.FixEntity;
+import quickfix.FieldNotFound;
+import quickfix.Message;
 import quickfix.MessageParseError;
 import quickfix.field.MsgType;
-import quickfix.fix44.Message;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -62,5 +63,24 @@ public class AppUtils {
 			return m;
 		}).collect(Collectors.toList());
 	}
+
+	public static String getString(Message message, Integer key){
+		String value = null;
+		try {
+			value = message.getString( key );
+		} catch (FieldNotFound fieldNotFound) {}
+
+		return value;
+	}
+
+	public static String getString(Message.Header header, Integer key){
+		String value = null;
+		try {
+			value = header.getString( key );
+		} catch (FieldNotFound fieldNotFound) {}
+
+		return value;
+	}
+
 
 }

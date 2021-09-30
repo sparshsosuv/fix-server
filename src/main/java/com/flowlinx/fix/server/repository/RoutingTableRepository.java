@@ -1,9 +1,12 @@
 package com.flowlinx.fix.server.repository;
 
-import com.flowlinx.fix.server.domain.FixLogEvent;
+import com.flowlinx.fix.server.domain.RoutingTable;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface FixLogEventRepository extends AbstractRepository<FixLogEvent> {
+import java.util.Optional;
 
+@Repository
+public interface RoutingTableRepository extends AbstractRepository<RoutingTable> {
+
+    Optional<RoutingTable> findByDeliverToCompID(String deliverToCompID);
 }

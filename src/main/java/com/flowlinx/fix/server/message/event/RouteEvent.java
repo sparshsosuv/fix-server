@@ -1,18 +1,20 @@
 package com.flowlinx.fix.server.message.event;
 
+import com.flowlinx.fix.server.domain.RoutingTable;
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
-import quickfix.SessionID;
-import quickfix.fix44.Message;
+import quickfix.Message;
 
 @Getter
-public class WorkflowEvent extends ApplicationEvent {
+public class RouteEvent extends ApplicationEvent {
 
     private Message message;
+    private RoutingTable routingTable;
 
-    public WorkflowEvent(Message message) {
+    public RouteEvent(Message message, RoutingTable routingTable) {
         super(message);
         this.message = message;
+        this.routingTable = routingTable;
     }
 
 

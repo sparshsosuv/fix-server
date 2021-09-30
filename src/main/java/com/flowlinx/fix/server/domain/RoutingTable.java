@@ -1,64 +1,27 @@
 package com.flowlinx.fix.server.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
-@Data @AllArgsConstructor @NoArgsConstructor
+@Data
 @Entity
-@Table( name = "log_events")
-@IdClass(FixLogEvent.PK.class)
-public class FixLogEvent implements FixEntity {
+@Table( name = "routing_table")
+public class RoutingTable implements Serializable {
 
     @Id
-    @Column(name = "time")
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm::ss.SSS")
-    private LocalDateTime time;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Id
-    @Column(name = "beginstring")
-    private String beginstring;
+    @Column(name = "deliver_to_comp_id")
+    private String deliverToCompID;
 
-    @Id
-    @Column(name = "sendercompid")
-    private String sendercompid;
+    @Column(name = "sender_comp_id")
+    private String senderCompID;
 
-    @Id
-    @Column(name = "targetcompid")
-    private String targetcompid;
+    @Column(name = "target_comp_id")
+    private String targetCompID;
 
-    @Column(name = "sendersubid")
-    private String sendersubid;
-
-    @Column(name = "senderlocid")
-    private String senderlocid;
-
-    @Column(name = "targetsubid")
-    private String targetsubid;
-
-    @Column(name = "targetlocid")
-    private String targetlocid;
-
-    @Column(name = "session_qualifier")
-    private String sessionqualifier;
-
-    @Column(name = "text")
-    private String text;
-
-    @Transient
-    private String msgType;
-
-    @Data
-    public static class PK implements Serializable {
-        private LocalDateTime time;
-        private String beginstring;
-        private String sendercompid;
-        private String targetcompid;
-    }
 
 }

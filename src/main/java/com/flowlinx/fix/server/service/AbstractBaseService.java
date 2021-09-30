@@ -1,6 +1,5 @@
 package com.flowlinx.fix.server.service;
 
-import com.flowlinx.fix.server.domain.FixEntity;
 import com.flowlinx.fix.server.domain.EntityFilter;
 import com.flowlinx.fix.server.repository.AbstractRepository;
 import com.flowlinx.fix.server.utils.AppUtils;
@@ -20,11 +19,12 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class AbstractBaseService<T extends FixEntity> {
+public abstract class AbstractBaseService<T extends Serializable> {
 
 	protected static final String PATH_SEPARATOR = ".";
 
@@ -311,7 +311,7 @@ public abstract class AbstractBaseService<T extends FixEntity> {
 		};
 	}
 
-    protected final Specification<T> notNull() {
+    protected final Specification<T> notNull(String column) {
 
     	return new Specification<T>() {
 
@@ -319,7 +319,7 @@ public abstract class AbstractBaseService<T extends FixEntity> {
 
 			@Override
 			public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				return cb.and( cb.isNotNull( evaluateAttrPath( "time", root) ) );
+				return cb.and( cb.isNotNull( evaluateAttrPath( column, root) ) );
 			}
 		};
     }
