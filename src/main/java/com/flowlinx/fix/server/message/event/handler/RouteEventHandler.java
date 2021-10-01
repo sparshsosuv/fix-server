@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import quickfix.Message;
 import quickfix.Session;
+import quickfix.field.OnBehalfOfCompID;
 import quickfix.field.SenderCompID;
 
 import java.util.Optional;
@@ -23,6 +24,10 @@ public class RouteEventHandler implements ApplicationListener<RouteEvent> {
         try{
             final Message message = event.getMessage();
             final RoutingTable route = event.getRoutingTable();
+
+            final String senderCompID =  AppUtils.getString( message.getHeader(), SenderCompID.FIELD );
+            message.getHeader().setField( new OnBehalfOfCompID( senderCompID ) );
+
             Session.sendToTarget( message, route.getSenderCompID(), route.getTargetCompID() );
 
         } catch (Exception ex) {
