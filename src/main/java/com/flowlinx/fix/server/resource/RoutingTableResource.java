@@ -28,13 +28,18 @@ public class RoutingTableResource {
     private RoutingTableService service;
 
     @PostMapping
-    public ResponseEntity<RoutingTable> create(RoutingTable routingTable){
+    public ResponseEntity<RoutingTable> create(@RequestBody RoutingTable routingTable){
         return ResponseEntity.ok( service.save( routingTable ) );
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> delete(RoutingTable routingTable){
-        service.delete( routingTable );
+    @PutMapping("/{id}")
+    public ResponseEntity<RoutingTable> update(@PathVariable Long id, @RequestBody RoutingTable routingTable){
+        return ResponseEntity.ok( service.update( id, routingTable ) );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        service.delete( id );
         return ResponseEntity.ok().build();
     }
 

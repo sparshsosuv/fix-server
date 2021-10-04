@@ -23,5 +23,4 @@ public class RoutingTable implements Serializable {
     @Column(name = "target_comp_id")
     private String targetCompID;
 
-
 }
