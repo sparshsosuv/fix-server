@@ -1,23 +1,16 @@
 package com.flowlinx.fix.server.fix;
 
-import com.flowlinx.fix.server.message.event.ClientEvent;
-import com.flowlinx.fix.server.message.event.WorkflowEvent;
-import com.flowlinx.fix.server.type.FixTargetSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import quickfix.*;
-
-import java.util.Arrays;
-import java.util.Optional;
 
 @Slf4j
 @Component
 public class ServerApplicationAdapter extends MessageCracker implements Application {
 
     @Autowired
-    private ApplicationEventPublisher publisher;
+    private FixSessionRouter router;
 
     @Override
     public void fromAdmin(Message message, SessionID sessionId)
@@ -58,36 +51,22 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
 
     @Handler
     public void executionReport(quickfix.fix44.ExecutionReport message, SessionID sessionID) {
-        publishEvent( message, sessionID );
+        router.route( message, sessionID );
     }
 
     @Handler
     public void newOrderHandler(quickfix.fix44.NewOrderSingle message, SessionID sessionID) {
-        publishEvent( message, sessionID );
+        router.route( message, sessionID );
     }
 
     @Handler
     public void replaceOrder(quickfix.fix44.OrderCancelReplaceRequest message, SessionID sessionID) {
-        publishEvent( message, sessionID );
+        router.route( message, sessionID );
     }
 
     @Handler
     public void cancelOrder(quickfix.fix44.OrderCancelRequest message, SessionID sessionID) {
-        publishEvent( message, sessionID );
-    }
-
-    private void publishEvent(quickfix.fix44.Message message, SessionID sessionID) {
-
-        final Optional<FixTargetSession> optSession = Arrays.stream( FixTargetSession.values() )
-                .filter(t -> t.name().equalsIgnoreCase( sessionID.getTargetCompID() ) ).findFirst();
-
-        if( optSession.isPresent() ){
-            publisher.publishEvent( new WorkflowEvent( message ) );
-
-        } else {
-            publisher.publishEvent( new ClientEvent( message ) );
-        }
-
+        router.route( message, sessionID );
     }
 
 }

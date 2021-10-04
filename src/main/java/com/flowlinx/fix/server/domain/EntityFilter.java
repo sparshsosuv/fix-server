@@ -1,6 +1,8 @@
 package com.flowlinx.fix.server.domain;
 
-public class EntityFilter<E extends FixEntity> {
+import java.io.Serializable;
+
+public class EntityFilter<E extends Serializable> {
 
 	private final E condition;
 

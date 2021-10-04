@@ -17,7 +17,7 @@ public class FixLogEventService extends AbstractBaseService<FixLogEvent>{
 
    	@Override
 	public Specification<FixLogEvent> specificationByFilter(EntityFilter<FixLogEvent> filter) {
-		Specification<FixLogEvent> spec = notNull();
+		Specification<FixLogEvent> spec = notNull("time");
 
 		if( filter.getCondition() != null ) {
 			final String sendercompid = filter.getCondition().getSendercompid();

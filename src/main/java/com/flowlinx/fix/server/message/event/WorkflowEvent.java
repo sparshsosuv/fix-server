@@ -2,8 +2,7 @@ package com.flowlinx.fix.server.message.event;
 
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
-import quickfix.SessionID;
-import quickfix.fix44.Message;
+import quickfix.Message;
 
 @Getter
 public class WorkflowEvent extends ApplicationEvent {
@@ -14,7 +13,5 @@ public class WorkflowEvent extends ApplicationEvent {
         super(message);
         this.message = message;
     }
-
-
 
 }

@@ -2,7 +2,7 @@ package com.flowlinx.fix.server.message.event;
 
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
-import quickfix.fix44.Message;
+import quickfix.Message;
 
 @Getter
 public class ClientEvent extends ApplicationEvent {

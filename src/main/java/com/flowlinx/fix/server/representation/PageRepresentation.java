@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Getter @Setter
-public class PageRepresentation<E extends FixEntity> implements Serializable {
+public class PageRepresentation<E extends Serializable> implements Serializable {
 
 	private static final long serialVersionUID = -6793768296376380855L;
 
