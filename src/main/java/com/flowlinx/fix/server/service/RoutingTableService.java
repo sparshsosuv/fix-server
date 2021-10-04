@@ -45,7 +45,7 @@ public class RoutingTableService extends AbstractBaseService<RoutingTable>{
 			throw new PreconditionalFailedException("DeliverToCompID " + item.getDeliverToCompID() + " already exists.");
 		}
 
-		return save( item );
+		return super.save( item );
 	}
 
 	@Transactional
