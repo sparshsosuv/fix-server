@@ -52,14 +52,16 @@ public class RoutingTableService extends AbstractBaseService<RoutingTable>{
 	public RoutingTable update(Long id, RoutingTable item) {
 		final RoutingTable routingTable = findById( id ).get();
 
-		if( findByDeliverToCompID( item.getDeliverToCompID() ).isPresent() ) {
+		if( !routingTable.getDeliverToCompID().equalsIgnoreCase( item.getDeliverToCompID() )
+				&& findByDeliverToCompID( item.getDeliverToCompID() ).isPresent() ) {
 			throw new PreconditionalFailedException("DeliverToCompID " + item.getDeliverToCompID() + " already exists.");
 		}
 
 		routingTable.setDeliverToCompID( item.getDeliverToCompID() );
 		routingTable.setSenderCompID( item.getSenderCompID() );
 		routingTable.setTargetCompID( item.getTargetCompID() );
-		return save( routingTable );
+
+		return super.save( routingTable );
 	}
 
 	@Transactional
