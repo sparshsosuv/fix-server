@@ -34,7 +34,12 @@ public class FixSessionRouter {
         final Optional<RoutingTable> opt = routingTableService.findByDeliverToCompID( deliverToCompId );
 
         if( opt.isPresent() ) {
-            publisher.publishEvent( new RouteEvent( message, opt.get() ) );
+
+            final RoutingTable route = opt.get();
+
+            log.info("Routing message to {}", route );
+
+            publisher.publishEvent( new RouteEvent( message, route ) );
 
         } else {
 
