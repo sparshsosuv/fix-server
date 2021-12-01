@@ -6,6 +6,8 @@ import com.flowlinx.fix.server.type.FixTargetSession;
 import com.flowlinx.fix.server.utils.AppUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.dozer.Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import quickfix.Message;
@@ -19,11 +21,14 @@ import java.util.Optional;
 @Component
 public class RouteEventHandler implements ApplicationListener<RouteEvent> {
 
+    @Autowired
+    private Mapper mapper;
+
     @Override
     public void onApplicationEvent(RouteEvent event) {
 
         try{
-            final Message message = event.getMessage();
+            final Message message = mapper.map( event.getMessage(), Message.class ) ;
             final RoutingTable route = event.getRoutingTable();
 
 
@@ -39,13 +44,13 @@ public class RouteEventHandler implements ApplicationListener<RouteEvent> {
 
             if(!result){
 
-                message.getHeader().setField( new OnBehalfOfCompID( "" ) );
-                message.setField( new ExecType( ExecType.REJECTED ) );
-                message.setField( new OrdStatus( OrdStatus.REJECTED ));
-                message.setField( new TransactTime( LocalDateTime.now() ) );
-                message.setField( new Text( StringUtils.replace( route.getTargetCompID() + " is offline", " ", "_" )  ) );
+                final Message reject = mapper.map( event.getMessage(), Message.class ) ;
+                reject.setField( new ExecType( ExecType.REJECTED ) );
+                reject.setField( new OrdStatus( OrdStatus.REJECTED ));
+                reject.setField( new TransactTime( LocalDateTime.now() ) );
+                reject.setField( new Text( StringUtils.replace( route.getTargetCompID() + " is currently offline", " ", "_" )  ) );
 
-                Session.sendToTarget( message, targetCompID, senderCompID );
+                Session.sendToTarget( reject, targetCompID, senderCompID );
             }
 
         } catch (Exception ex) {
