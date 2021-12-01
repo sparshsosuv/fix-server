@@ -42,8 +42,9 @@ public class RouteEventHandler implements ApplicationListener<RouteEvent> {
                 message.setField( new TransactTime( LocalDateTime.now() ) );
                 message.setField( new Text( StringUtils.replace( route.getTargetCompID() + " is offline", " ", "_" )  ) );
 
-                final String targetCompID =  AppUtils.getString( message.getHeader(), TargetCompID.FIELD );
-                Session.sendToTarget( message, targetCompID, senderCompID );
+                final String server = FixTargetSession.from( senderCompID ).get().getSender().name();
+
+                Session.sendToTarget( message, server, senderCompID );
             }
 
         } catch (Exception ex) {
