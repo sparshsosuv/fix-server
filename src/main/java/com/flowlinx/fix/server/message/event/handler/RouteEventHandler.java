@@ -5,13 +5,14 @@ import com.flowlinx.fix.server.message.event.RouteEvent;
 import com.flowlinx.fix.server.type.FixTargetSession;
 import com.flowlinx.fix.server.utils.AppUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import quickfix.Message;
 import quickfix.Session;
-import quickfix.field.OnBehalfOfCompID;
-import quickfix.field.SenderCompID;
+import quickfix.field.*;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Slf4j
@@ -25,6 +26,8 @@ public class RouteEventHandler implements ApplicationListener<RouteEvent> {
             final Message message = event.getMessage();
             final RoutingTable route = event.getRoutingTable();
 
+
+            final String targetCompID =  AppUtils.getString( message.getHeader(), TargetCompID.FIELD );
             final String senderCompID =  AppUtils.getString( message.getHeader(), SenderCompID.FIELD );
             message.getHeader().setField( new OnBehalfOfCompID( senderCompID ) );
 
@@ -32,7 +35,18 @@ public class RouteEventHandler implements ApplicationListener<RouteEvent> {
             log.info("ROUTE: ", route.toString()  );
             log.info("MESSAGE: {}",  message.toString() );
 
-            Session.sendToTarget( message, route.getSenderCompID(), route.getTargetCompID() );
+            final boolean result = Session.sendToTarget( message, route.getSenderCompID(), route.getTargetCompID() );
+
+            if(!result){
+
+                message.getHeader().setField( new OnBehalfOfCompID( "" ) );
+                message.setField( new ExecType( ExecType.REJECTED ) );
+                message.setField( new OrdStatus( OrdStatus.REJECTED ));
+                message.setField( new TransactTime( LocalDateTime.now() ) );
+                message.setField( new Text( StringUtils.replace( route.getTargetCompID() + " is offline", " ", "_" )  ) );
+
+                Session.sendToTarget( message, targetCompID, senderCompID );
+            }
 
         } catch (Exception ex) {
             ex.printStackTrace();;

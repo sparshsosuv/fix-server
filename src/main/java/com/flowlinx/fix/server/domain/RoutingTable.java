@@ -1,11 +1,13 @@
 package com.flowlinx.fix.server.domain;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Data
+@Getter @Setter @ToString
 @Entity
 @Table( name = "routing_table")
 public class RoutingTable implements Serializable {
