@@ -28,7 +28,8 @@ public class RouteEventHandler implements ApplicationListener<RouteEvent> {
             final String senderCompID =  AppUtils.getString( message.getHeader(), SenderCompID.FIELD );
             message.getHeader().setField( new OnBehalfOfCompID( senderCompID ) );
 
-            log.info("Routing message FROM: {}, TO: ", route.getSenderCompID(), route.getTargetCompID()  );
+            log.info("Routing message FROM: {}, TO: {}", route.getSenderCompID(), route.getTargetCompID()  );
+            log.info("ROUTE: ", route.toString()  );
             log.info("MESSAGE: {}",  message.toString() );
 
             Session.sendToTarget( message, route.getSenderCompID(), route.getTargetCompID() );
