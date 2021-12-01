@@ -8,6 +8,7 @@ import com.flowlinx.fix.server.service.RoutingTableService;
 import com.flowlinx.fix.server.type.FixTargetSession;
 import com.flowlinx.fix.server.utils.AppUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,9 @@ public class FixSessionRouter {
     @Autowired
     private ApplicationEventPublisher publisher;
 
+    @Autowired
+    private Mapper mapper;
+
     public void route(Message message, SessionID sessionID) {
 
         final String deliverToCompId = AppUtils.getString( message.getHeader(), DeliverToCompID.FIELD );
@@ -35,7 +39,7 @@ public class FixSessionRouter {
 
         if( opt.isPresent() ) {
 
-            final RoutingTable route = opt.get();
+            final RoutingTable route =  mapper.map( opt.get(), RoutingTable.class );
 
             log.info("Routing message to {}", route );
 
