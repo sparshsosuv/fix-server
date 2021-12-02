@@ -46,7 +46,7 @@ public class RouteEventHandler implements ApplicationListener<RouteEvent> {
                 message.setField( new ExecType( ExecType.REJECTED ) );
                 message.setField( new OrdStatus( OrdStatus.REJECTED ));
                 message.setField( new TransactTime( LocalDateTime.now() ) );
-                message.setField( new Text( StringUtils.replace( route.getTargetCompID() + " session is currently offline", " ", "_" )  ) );
+                message.setField( new Text( StringUtils.replace( route.getTargetCompID() + " session is currently down", " ", "_" )  ) );
                 message.setString( RefSeqNum.FIELD, refSeqNum );
                 message.setString( RefMsgType.FIELD, refMsgType );
                 message.setInt(SessionRejectReason.FIELD, SessionRejectReason.DECRYPTION_PROBLEM);
