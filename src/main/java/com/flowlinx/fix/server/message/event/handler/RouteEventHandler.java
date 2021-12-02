@@ -36,13 +36,21 @@ public class RouteEventHandler implements ApplicationListener<RouteEvent> {
 
             if(!result){
 
+                final String server = FixTargetSession.from( senderCompID ).get().getSender().name();
+                final String refSeqNum = AppUtils.getString( message.getHeader(), MsgSeqNum.FIELD );
+                final String refMsgType = AppUtils.getString( message.getHeader(), MsgType.FIELD);
+
                 message.getHeader().removeField( OnBehalfOfCompID.FIELD );
+                message.getHeader().setField( new MsgType("3") );
+                message.getHeader().setField( new RefSeqNum( Integer.valueOf( refSeqNum ) ) );
+
                 message.setField( new ExecType( ExecType.REJECTED ) );
                 message.setField( new OrdStatus( OrdStatus.REJECTED ));
                 message.setField( new TransactTime( LocalDateTime.now() ) );
-                message.setField( new Text( StringUtils.replace( route.getTargetCompID() + " is offline", " ", "_" )  ) );
-
-                final String server = FixTargetSession.from( senderCompID ).get().getSender().name();
+                message.setField( new Text( StringUtils.replace( route.getTargetCompID() + " session is currently offline", " ", "_" )  ) );
+                message.setString(RefSeqNum.FIELD, refSeqNum);
+                message.setString(RefMsgType.FIELD, refMsgType);
+                message.setInt(SessionRejectReason.FIELD, SessionRejectReason.DECRYPTION_PROBLEM);
 
                 Session.sendToTarget( message, server, senderCompID );
             }
