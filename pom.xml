@@ -17,7 +17,7 @@
         <quickfixj-spring-boot-starter.version>2.9.0</quickfixj-spring-boot-starter.version>
         <oi.github.openfeign.version>10.10.1</oi.github.openfeign.version>
         <org.mapstruct.version>1.4.1.Final</org.mapstruct.version>
-        <postgresql.version>9.4.1212</postgresql.version>
+        <postgresql.version>42.2.14</postgresql.version>
         <jjwt.version>0.10.6</jjwt.version>
     </properties>
     <dependencies>
