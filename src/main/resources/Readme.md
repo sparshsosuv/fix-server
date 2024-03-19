@@ -25,6 +25,7 @@ It handles fix connectivity.
 #### Main configurations
 
 
-quickfixj-server-uat.cfg
+quickfixj-uat-acceptor.cfg
+quickfixj-uat-initiator.cfg
 
 
