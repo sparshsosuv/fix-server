@@ -26,7 +26,10 @@ public class ClientApplicationAdapter extends MessageCracker implements Applicat
     @Override
     public void fromApp(Message message, SessionID sessionId)
             throws FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType {
+
+        log.info("<<<<<<<<<<<<<<<<<------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.." );
         crack(message, sessionId);
+        log.info("<<<<<<<<<<<<<<<<<------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.." );
     }
 
     @Override
@@ -51,6 +54,9 @@ public class ClientApplicationAdapter extends MessageCracker implements Applicat
 
     @Handler
     public void executionReport(quickfix.fix44.ExecutionReport message, SessionID sessionID) {
+        log.info("<<<<<<<<<<<<<<<<<<<<<<<-------------------------------------------------.." );
+        log.info( "sender={}, target={}", sessionID.getSenderCompID(), sessionID.getTargetCompID() );
+        log.info("<<<<<<<<<<<<<<<<<<<<<<<-------------------------------------------------.." );
         router.route( message, sessionID );
     }
 

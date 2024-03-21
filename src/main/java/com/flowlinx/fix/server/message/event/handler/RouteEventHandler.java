@@ -4,6 +4,7 @@ import com.flowlinx.fix.server.domain.RoutingTable;
 import com.flowlinx.fix.server.message.event.RouteEvent;
 import com.flowlinx.fix.server.type.FixTargetSession;
 import com.flowlinx.fix.server.utils.AppUtils;
+import com.flowlinx.fix.server.utils.FixConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationListener;
@@ -28,9 +29,6 @@ public class RouteEventHandler implements ApplicationListener<RouteEvent> {
 
             final String senderCompID =  AppUtils.getString( message.getHeader(), SenderCompID.FIELD );
             message.getHeader().setField( new OnBehalfOfCompID( senderCompID ) );
-
-            log.info("Routing message FROM: {}, TO: {}", route.getSenderCompID(), route.getTargetCompID()  );
-            log.info("MESSAGE: {}",  message.toString() );
 
             final boolean result = Session.sendToTarget( message, route.getSenderCompID(), route.getTargetCompID() );
 

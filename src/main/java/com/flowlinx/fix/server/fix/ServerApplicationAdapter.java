@@ -25,8 +25,10 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
 
     @Override
     public void fromApp(Message message, SessionID sessionId)
-            throws FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType {
-        crack(message, sessionId);
+            throws FieldNotFound, IncorrectTagValue, UnsupportedMessageType {
+        log.info("<<<<<<<<<<<<<<<<<------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.." );
+        crack( message, sessionId );
+        log.info("<<<<<<<<<<<<<<<<<------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.." );
     }
 
     @Override
@@ -51,6 +53,22 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
 
     @Handler
     public void executionReport(quickfix.fix44.ExecutionReport message, SessionID sessionID) {
+        log.info("<<<<<<<<<<<<<<<<<<<<<<<-------------------------------------------------.." );
+        log.info( "sender={}, target={}", sessionID.getSenderCompID(), sessionID.getTargetCompID() );
+        log.info("<<<<<<<<<<<<<<<<<<<<<<<-------------------------------------------------.." );
+        router.route( message, sessionID );
+    }
+
+    @Handler
+    public void executionReport(quickfix.fix44.Reject message, SessionID sessionID) {
+        log.info("<<<<<<<<<<<<<<<<<<<<<<<-------------------------------------------------.." );
+        log.info( "sender={}, target={}", sessionID.getSenderCompID(), sessionID.getTargetCompID() );
+        log.info("<<<<<<<<<<<<<<<<<<<<<<<-------------------------------------------------.." );
+        router.route( message, sessionID );
+    }
+
+    @Handler
+    public void heartbeat(quickfix.fix44.Heartbeat message, SessionID sessionID) {
         router.route( message, sessionID );
     }
 

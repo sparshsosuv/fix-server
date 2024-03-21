@@ -5,10 +5,13 @@ import lombok.Getter;
 import java.util.Arrays;
 import java.util.Optional;
 
+/**
+ * NEVER ADD FLX_WORKFLOW HERE, IT'S ONLY FOR EXTERNAL FIX CONNECTIONS IDS
+ */
 @Getter
 public enum FixTargetSession {
-    FLX_SIMULATOR( FixSenderSession.FLX_SERVER ),
-    JD_STOCK( FixSenderSession.FLOWLINXUAT );
+    FLX_SIMULATOR( FixSenderSession.FLX_SERVER),
+    JD_STOCK( FixSenderSession.FLX_SERVER );
 
     FixSenderSession sender;
 

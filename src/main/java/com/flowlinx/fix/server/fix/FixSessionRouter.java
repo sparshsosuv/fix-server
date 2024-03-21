@@ -14,6 +14,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import quickfix.*;
 import quickfix.field.DeliverToCompID;
+import quickfix.field.TargetCompID;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -37,6 +38,8 @@ public class FixSessionRouter {
 
         final Optional<RoutingTable> opt = routingTableService.findByDeliverToCompID( deliverToCompId );
 
+        log.info("------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.." );
+
         if( opt.isPresent() ) {
 
             final RoutingTable route =  mapper.map( opt.get(), RoutingTable.class );
@@ -50,6 +53,8 @@ public class FixSessionRouter {
             final Optional<FixTargetSession> optSession = Arrays.stream( FixTargetSession.values() )
                     .filter( t -> t.name().equalsIgnoreCase( sessionID.getTargetCompID() ) )
                     .findFirst();
+
+            log.info("FixSessionRouter - Not Routing message={}, WorkflowEvent={}", message, optSession.isPresent() );
 
             if( optSession.isPresent() ){
                 publisher.publishEvent( new WorkflowEvent( message ) );
