@@ -1,7 +1,9 @@
 package com.flowlinx.fix.server.service;
 
 import com.flowlinx.fix.server.domain.DynamicSession;
+import com.flowlinx.fix.server.domain.FixSessionExt;
 import com.flowlinx.fix.server.repository.DynamicSessionRepository;
+import com.flowlinx.fix.server.repository.FixSessionExtRepository;
 import com.flowlinx.fix.server.resource.representation.CreateSessionRepresentation;
 import lombok.extern.slf4j.Slf4j;
 import org.dozer.Mapper;
@@ -13,6 +15,8 @@ import quickfix.field.BeginString;
 import quickfix.field.SenderCompID;
 import quickfix.field.TargetCompID;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +41,12 @@ public class DynamicSessionService {
 
     @Autowired
     private SessionFactory sessionFactory;
+
+    @Autowired
+    private FixSessionExtRepository fixSessionExtRepository;
+
+    @Autowired
+    private ThreadedSocketInitiator socketInitiator;
 
     public void create( CreateSessionRepresentation item ) {
         final DynamicSession session = mapper.map( item, DynamicSession.class );
@@ -95,6 +105,114 @@ public class DynamicSessionService {
 
             log.info("Dynamic sessions added successfully");
 
+//        try {
+//            final List<SessionID> acceptorSessions = socketAcceptor.getSessions();
+//            final List<SessionID> initiatorSessions = socketInitiator.getSessions();
+//
+//            for( SessionID sessionID : acceptorSessions ){
+//
+//                final Properties properties = socketAcceptor.getSettings().getSessionProperties( sessionID );
+//
+//                String sId = properties.getProperty("SenderCompID") + "." + properties.getProperty("TargetCompID");
+//                String fixVersion = properties.getProperty("BeginString");
+//                FixSessionExt fixSessionExt = fixSessionExtRepository.findBySessionIdAndFixVersion(sId, fixVersion);
+//
+//                if (fixSessionExt == null) {
+//                    fixSessionExt = new FixSessionExt();
+//                }
+//
+//                fixSessionExt.setSessionId(sId);
+//                fixSessionExt.setSenderCompId(properties.getProperty("SenderCompID"));
+//                fixSessionExt.setTargetCompId(properties.getProperty("TargetCompID"));
+//                fixSessionExt.setConnectionType("");
+////                if (fixSessionExt.getSessionStatus().equals(("UP")))
+////                    fixSessionExt.setSessionStatus("UP");
+//                fixSessionExt.setConnectionType("Acceptor");
+//                fixSessionExt.setFirmName("");
+//                fixSessionExt.setStartTime("");
+//                fixSessionExt.setEndTime("");
+//                fixSessionExt.setIpAddress("");
+//                if (!Long.valueOf(properties.getProperty("SocketAcceptPort")).equals(fixSessionExt.getPort()))
+//                    fixSessionExt.setPort(Long.valueOf(properties.getProperty("SocketAcceptPort")));
+//                fixSessionExt.setFixUser("");
+//                fixSessionExt.setFixPassword("");
+//                fixSessionExt.setHeartbeatInterval(0L);
+//                fixSessionExt.setFixVersion(fixVersion);
+//                fixSessionExt.setSenderSubId("");
+//                fixSessionExt.setSenderLocationId("");
+//                fixSessionExt.setTargetSubId("");
+//                fixSessionExt.setTargetLocationId("");
+//                fixSessionExt.setApplicationType("");
+//                fixSessionExt.setDataDictionary("");
+//                fixSessionExt.setCounterpartyType("");
+//                fixSessionExt.setRoutingTag("");
+//                fixSessionExt.setTimestamp(Timestamp.from(Instant.now()));
+//                fixSessionExt.setUseDataDictionary("");
+//                fixSessionExt.setInstance("");
+//                fixSessionExt.setRegion("");
+//                fixSessionExt.setHub("");
+//                fixSessionExt.setTimeZone("");
+//                fixSessionExt.setDisplayStartTime("");
+//                fixSessionExt.setDisplayEndTime("");
+//                fixSessionExt.setNormalization(false);
+//                fixSessionExt.setLastUpdated(Timestamp.from(Instant.now()));
+//                fixSessionExtRepository.save(fixSessionExt);
+//                System.out.println("SESSION::::::: "+ fixSessionExt.getSessionId() + " " + fixSessionExt.getFixVersion() + " " + fixSessionExt.getSessionStatus());
+//            }
+//
+//            for( SessionID sessionID : initiatorSessions ){
+//                final Properties properties = socketInitiator.getSettings().getSessionProperties( sessionID );
+//
+//                String sId = properties.getProperty("SenderCompID") + "." + properties.getProperty("TargetCompID");
+//                String fixVersion = properties.getProperty("BeginString");
+//                FixSessionExt fixSessionExt = fixSessionExtRepository.findBySessionIdAndFixVersion(sId, fixVersion);
+//
+//                if (fixSessionExt == null) {
+//                    fixSessionExt = new FixSessionExt();
+//                }
+//
+//                fixSessionExt.setSessionId(sId);
+//                fixSessionExt.setSenderCompId(properties.getProperty("SenderCompID"));
+//                fixSessionExt.setTargetCompId(properties.getProperty("TargetCompID"));
+//                fixSessionExt.setConnectionType("");
+////                fixSessionExt.setSessionStatus("DOWN");
+//                fixSessionExt.setConnectionType("Initiator");
+//                fixSessionExt.setFirmName("");
+//                fixSessionExt.setStartTime("");
+//                fixSessionExt.setEndTime("");
+//                fixSessionExt.setIpAddress(properties.getProperty("SocketConnectHost"));
+//                if (!Long.valueOf(properties.getProperty("SocketConnectPort")).equals(fixSessionExt.getPort()))
+//                    fixSessionExt.setPort(Long.valueOf(properties.getProperty("SocketConnectPort")));
+//                fixSessionExt.setFixUser("");
+//                fixSessionExt.setFixPassword("");
+//                fixSessionExt.setHeartbeatInterval(0L);
+//                fixSessionExt.setFixVersion(fixVersion);
+//                fixSessionExt.setSenderSubId("");
+//                fixSessionExt.setSenderLocationId("");
+//                fixSessionExt.setTargetSubId("");
+//                fixSessionExt.setTargetLocationId("");
+//                fixSessionExt.setApplicationType("");
+//                fixSessionExt.setDataDictionary("");
+//                fixSessionExt.setCounterpartyType("");
+//                fixSessionExt.setRoutingTag("");
+//                fixSessionExt.setTimestamp(Timestamp.from(Instant.now()));
+//                fixSessionExt.setUseDataDictionary("");
+//                fixSessionExt.setInstance("");
+//                fixSessionExt.setRegion("");
+//                fixSessionExt.setHub("");
+//                fixSessionExt.setTimeZone("");
+//                fixSessionExt.setDisplayStartTime("");
+//                fixSessionExt.setDisplayEndTime("");
+//                fixSessionExt.setNormalization(false);
+//                fixSessionExt.setLastUpdated(Timestamp.from(Instant.now()));
+//                fixSessionExtRepository.save(fixSessionExt);
+//                System.out.println("SESSION::::::: "+ fixSessionExt.getSessionId() + " " + fixSessionExt.getFixVersion() + " " + fixSessionExt.getSessionStatus());
+//            }
+//
+//        }  catch (ConfigError e) {
+//            throw new RuntimeException(e);
+//        }
+//
         } catch ( Exception e ) {
             e.printStackTrace();
             log.error( String.format( "Error on creating fix session: %s", e.getMessage()));

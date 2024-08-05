@@ -61,6 +61,9 @@ public class FixSessionRepresentation implements Serializable {
 
     private String socketConnectHost;
     private Integer socketConnectPort;
+
+    private boolean normalization;
+    private String normalizationClientIds;
     
 
 }

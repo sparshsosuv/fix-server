@@ -1,0 +1,39 @@
+[
+  {
+    "action": "delete",
+    "source": {
+      "fix-field": "66"
+    },
+    "conditions": [
+      {"operand": "66", "operator": "NOT_EQUALS", "value": ""}
+    ]
+  },
+  {
+    "action": "delete",
+    "source": {
+      "fix-field": "851"
+    },
+    "conditions": [
+      {"operand": "35", "operator": "IN", "value": ["8"]},
+      {"operand": "851", "operator": "IN", "value": ["4"]}
+    ]
+  },
+  {
+    "action": "copy",
+    "source": {
+      "fix-field": "57"
+    },
+    "target": "58",
+    "conditions": [
+      {"operand": "35", "operator": "IN", "value": ["D"]}
+    ]
+  },
+  {
+    "action": "set",
+    "target": "775",
+    "value": "1",
+    "conditions": [
+      {"operand": "1", "operator": "CONTAINS", "value": "SWAP"}
+    ]
+  }
+]

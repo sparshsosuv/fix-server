@@ -1,6 +1,6 @@
 #!/bin/bash
-JARFile="/opt/flowlinx/apps/flowlinx-fix-server/target/flowlinx-fix-server.jar"
-PIDFile="/opt/flowlinx/pid/flowlinx-fix-server.pid"
+JARFile="/opt/sosuv/apps/flowlinx-fix-server/target/flowlinx-fix-server.jar"
+PIDFile="/opt/sosuv/pid/flowlinx-fix-server.pid"
 JVM_OPTS="-Xdebug -Xmx2g -Dspring.profiles.active=uat"
 SPRING_OPTS=""
 
@@ -68,7 +68,7 @@ case "$1" in
       echo "Process $(print_process) already running"
       exit 1
     fi
-    nohup java $JVM_OPTS -jar $JARFile </dev/null>/opt/flowlinx/logs/flowlinx-fix-server-run.log 2>&1 & $SPRING_OPTS &
+    nohup java $JVM_OPTS -jar $JARFile </dev/null>/opt/sosuv/logs/flowlinx-fix-server-run.log 2>&1 & $SPRING_OPTS &
     echo "Process started"
     ;;
   restart)

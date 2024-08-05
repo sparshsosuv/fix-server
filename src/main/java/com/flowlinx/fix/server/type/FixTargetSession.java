@@ -10,8 +10,12 @@ import java.util.Optional;
  */
 @Getter
 public enum FixTargetSession {
-    FLX_SIMULATOR( FixSenderSession.FLX_SERVER),
-    JD_STOCK( FixSenderSession.FLX_SERVER );
+//    SOSUV_SIMULATOR( FixSenderSession.SOSUV_SERVER),
+    MILPA( FixSenderSession.SOSUV_SERVER),
+    VIRTU( FixSenderSession.SOSUV_SERVER_44),
+    SOSUV_VAYU( FixSenderSession.SOSUV_SERVER),
+    SOSUV_VAYU_44( FixSenderSession.SOSUV_SERVER_44),
+    JD_STOCK( FixSenderSession.SOSUV_SERVER );
 
     FixSenderSession sender;
 

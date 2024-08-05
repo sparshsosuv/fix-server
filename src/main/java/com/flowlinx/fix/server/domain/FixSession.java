@@ -53,6 +53,21 @@ public class FixSession implements Serializable {
     @Column(name = "outgoing_seqnum")
     private Integer outgoingSeqnum;
 
+
+    /* Newly Added */
+    @Column(name = "incoming_seqnum_edit")
+    private Integer incomingSeqnumEdit;
+
+    @Column(name = "outgoing_seqnum_edit")
+    private Integer outgoingSeqnumEdit;
+
+    @Column(name = "is_incoming_edited")
+    private Boolean isIncomingEdited;
+
+    @Column(name = "is_outgoing_edited")
+    private Boolean isOutgoingEdited;
+    /* Newly Added */
+
     @Data
     public static class PK implements Serializable {
         private LocalDateTime time;

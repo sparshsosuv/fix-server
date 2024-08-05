@@ -5,6 +5,7 @@ import com.flowlinx.fix.server.message.event.ClientEvent;
 import com.flowlinx.fix.server.message.event.RouteEvent;
 import com.flowlinx.fix.server.message.event.WorkflowEvent;
 import com.flowlinx.fix.server.service.RoutingTableService;
+import com.flowlinx.fix.server.service.RuleService;
 import com.flowlinx.fix.server.type.FixTargetSession;
 import com.flowlinx.fix.server.utils.AppUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -44,9 +45,9 @@ public class FixSessionRouter {
 
             final RoutingTable route =  mapper.map( opt.get(), RoutingTable.class );
 
-            log.info("Routing message to {}", route );
+            log.info("Routing message to r{}", route );
 
-            publisher.publishEvent( new RouteEvent( message, route ) );
+            publisher.publishEvent( new RouteEvent( message, route, sessionID ) );
 
         } else {
 
@@ -60,7 +61,7 @@ public class FixSessionRouter {
                 publisher.publishEvent( new WorkflowEvent( message ) );
 
             } else {
-                publisher.publishEvent( new ClientEvent( message ) );
+                publisher.publishEvent( new ClientEvent( message, sessionID ) );
             }
 
         }

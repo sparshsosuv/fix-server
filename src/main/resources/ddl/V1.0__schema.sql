@@ -64,16 +64,20 @@ CREATE TABLE log_events (
 );
 
 CREATE TABLE sessions (
-    beginstring       VARCHAR(8)  NOT NULL,
-    sendercompid      VARCHAR(256) NOT NULL,
-    sendersubid       VARCHAR(256) NOT NULL,
-    senderlocid       VARCHAR(256) NOT NULL,
-    targetcompid      VARCHAR(256) NOT NULL,
-    targetsubid       VARCHAR(256) NOT NULL,
-    targetlocid       VARCHAR(256) NOT NULL,
-    session_qualifier VARCHAR(256) NOT NULL,
-    creation_time     TIMESTAMP   NOT NULL,
-    incoming_seqnum   INT         NOT NULL,
-    outgoing_seqnum   INT         NOT NULL,
-    PRIMARY KEY(creation_time, beginstring, sendercompid, targetcompid)
+                          beginstring       VARCHAR(8)  NOT NULL,
+                          sendercompid      VARCHAR(256) NOT NULL,
+                          sendersubid       VARCHAR(256) NOT NULL,
+                          senderlocid       VARCHAR(256) NOT NULL,
+                          targetcompid      VARCHAR(256) NOT NULL,
+                          targetsubid       VARCHAR(256) NOT NULL,
+                          targetlocid       VARCHAR(256) NOT NULL,
+                          session_qualifier VARCHAR(256) NOT NULL,
+                          creation_time     TIMESTAMP   NOT NULL,
+                          incoming_seqnum   INT         NOT NULL,
+                          outgoing_seqnum   INT         NOT NULL,
+                          incoming_seqnum_edit INT DEFAULT 1,
+                          outgoing_seqnum_edit INT DEFAULT 1,
+                          is_incoming_edited BOOLEAN,
+                          is_outgoing_edited BOOLEAN,
+                          PRIMARY KEY(creation_time, beginstring, sendercompid, targetcompid)
 );

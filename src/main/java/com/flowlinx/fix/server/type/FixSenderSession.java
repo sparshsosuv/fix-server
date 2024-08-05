@@ -1,5 +1,5 @@
 package com.flowlinx.fix.server.type;
 
 public enum FixSenderSession {
-    FLX_SERVER,
+    SOSUV_SERVER, SOSUV_SERVER_44
 }

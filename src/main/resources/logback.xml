@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
 
-    <property name="LOG_LOCATION" value="/opt/flowlinx/logs/" />
+    <property name="LOG_LOCATION" value="/opt/sosuv/logs/" />
 
     <appender name="ROOT_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_LOCATION:-.}/flowlinx-fix-server.log</file>

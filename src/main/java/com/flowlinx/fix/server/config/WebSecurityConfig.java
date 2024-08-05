@@ -26,7 +26,7 @@ import org.springframework.web.filter.CorsFilter;
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfig {
 
-   private static final String[] AUTH_WHITELIST = { "/auth/**", "/public/**" };
+   private static final String[] AUTH_WHITELIST = { "/auth/**", "/public/**", "/fix/session/**" };
 
    @Bean
    public PasswordEncoder passwordEncoder() {
