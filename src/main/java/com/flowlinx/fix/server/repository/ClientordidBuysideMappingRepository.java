@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface ClientordidBuysideMappingRepository extends AbstractRepository<ClientordidBuysideMapping> {
 
     Optional<ClientordidBuysideMapping> findByClientOrderId(String deliverToCompID);
+    Optional<ClientordidBuysideMapping> findByMsgTypeAndMsgSeqNumAndSenderAndTargetAndFixVersion(String msgType, Long msgSeqNum, String sender, String target, String fixVersion);
+
 }

@@ -277,21 +277,21 @@ public class DB {
 
         try {
             Files.deleteIfExists(
-                    Paths.get("src/main/resources/fix/fix-acceptor.cfg"));
+                    Paths.get("/opt/sosuv/repositories/flowlinx-fix-server/src/main/resources/fix/fix-acceptor.cfg"));
             Files.deleteIfExists(
-                    Paths.get("src/main/resources/fix/fix-initiator.cfg"));
+                    Paths.get("/opt/sosuv/repositories/flowlinx-fix-server/src/main/resources/fix/fix-initiator.cfg"));
             System.out.println("Deletion successful.");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        File acceptorFile = new File("src/main/resources/fix/fix-acceptor.cfg");
+        File acceptorFile = new File("/opt/sosuv/repositories/flowlinx-fix-server/src/main/resources/fix/fix-acceptor.cfg");
         FileWriter acceptorFw = new FileWriter(acceptorFile,true);
 
         BufferedWriter acceptorOut = new BufferedWriter(acceptorFw);
 
-        File initiatorFile = new File("src/main/resources/fix/fix-initiator.cfg");
+        File initiatorFile = new File("/opt/sosuv/repositories/flowlinx-fix-server/src/main/resources/fix/fix-initiator.cfg");
         FileWriter initiatorFw = new FileWriter(initiatorFile,true);
 
         BufferedWriter initiatorOut = new BufferedWriter(initiatorFw);
@@ -381,6 +381,14 @@ public class DB {
                 String DataDictionary = "/opt/sosuv/repositories/flowlinx-fix-server/src/main/resources/fix/" + rs.getString("datadictionary");
                 Boolean Normalization = rs.getBoolean("normalization");
                 String NormalizationClients = rs.getString("normalization_clients");
+                Boolean UseDataDictionary = rs.getBoolean("usedatadictionary");
+                Boolean ValidateUserDefinedFields = rs.getBoolean("validateuserdefinedfields");
+                Boolean ValidateFieldsOutOfOrder = rs.getBoolean("validatefieldsoutoforder");
+                Boolean ValidateFieldsHaveValue = rs.getBoolean("validatefieldshavevalue");
+                Boolean PersistMessages = rs.getBoolean("persistmessages");
+                Boolean ResetOnLogout = rs.getBoolean("resetonlogout");
+                Boolean ResetOnDisconnect = rs.getBoolean("resetondisconnect");
+
                 System.out.println("sender sub id++++++++++++++++++ "+ SenderSubID+" "+TargetSubID);
 
 //                File configfile = createSeparateConfigFile(SenderCompID,TargetCompID);
@@ -423,9 +431,50 @@ public class DB {
                             acceptorOut.write("\n" + "NormalizationClientIds=" + NormalizationClients);
                         }
                         acceptorOut.write("\n" + "SocketAcceptPort=" + port);
-                        acceptorOut.write("\n" + "ValidateUserDefinedFields=N\n" +
-                                "ValidateFieldsOutOfOrder=N\n" +
-                                "ValidateFieldsHaveValue=N\n");
+
+                        if(UseDataDictionary) {
+                            acceptorOut.write("\n" + "UseDataDictionary=Y");
+                        } else {
+                            acceptorOut.write("\n" + "UseDataDictionary=N");
+                        }
+
+                        if(ValidateUserDefinedFields) {
+                            acceptorOut.write("\n" + "ValidateUserDefinedFields=Y");
+                        } else {
+                            acceptorOut.write("\n" + "ValidateUserDefinedFields=N");
+                        }
+
+                        if(ValidateFieldsOutOfOrder) {
+                            acceptorOut.write("\n" + "ValidateFieldsOutOfOrder=Y");
+                        } else {
+                            acceptorOut.write("\n" + "ValidateFieldsOutOfOrder=N");
+                        }
+
+                        if(ValidateFieldsHaveValue) {
+                            acceptorOut.write("\n" + "ValidateFieldsHaveValue=Y");
+                        } else {
+                            acceptorOut.write("\n" + "ValidateFieldsHaveValue=N");
+                        }
+
+                        if(PersistMessages) {
+                            acceptorOut.write("\n" + "PersistMessages=Y");
+                        } else {
+                            acceptorOut.write("\n" + "PersistMessages=N");
+                        }
+
+                        if(ResetOnLogout) {
+                            acceptorOut.write("\n" + "ResetOnLogout=Y");
+                        } else {
+                            acceptorOut.write("\n" + "ResetOnLogout=N");
+                        }
+
+                        if(ResetOnDisconnect) {
+                            acceptorOut.write("\n" + "ResetOnDisconnect=Y");
+                        } else {
+                            acceptorOut.write("\n" + "ResetOnDisconnect=N");
+                        }
+
+                        acceptorOut.write("\n");
 
                     } else if (ConnectionType.equalsIgnoreCase("initiator")) {
                         initiatorOut.write("\n\n" + "[SESSION]");
@@ -466,6 +515,51 @@ public class DB {
                             initiatorOut.write("\n" + "SocketConnectHost=" + ipaddress);
                         if(port!=null && !port.isEmpty())
                             initiatorOut.write("\n" + "SocketConnectPort=" + port);
+
+
+                        if(UseDataDictionary) {
+                            initiatorOut.write("\n" + "UseDataDictionary=Y");
+                        } else {
+                            initiatorOut.write("\n" + "UseDataDictionary=N");
+                        }
+
+                        if(ValidateUserDefinedFields) {
+                            initiatorOut.write("\n" + "ValidateUserDefinedFields=Y");
+                        } else {
+                            initiatorOut.write("\n" + "ValidateUserDefinedFields=N");
+                        }
+
+                        if(ValidateFieldsOutOfOrder) {
+                            initiatorOut.write("\n" + "ValidateFieldsOutOfOrder=Y");
+                        } else {
+                            initiatorOut.write("\n" + "ValidateFieldsOutOfOrder=N");
+                        }
+
+                        if(ValidateFieldsHaveValue) {
+                            initiatorOut.write("\n" + "ValidateFieldsHaveValue=Y");
+                        } else {
+                            initiatorOut.write("\n" + "ValidateFieldsHaveValue=N");
+                        }
+
+                        if(PersistMessages) {
+                            initiatorOut.write("\n" + "PersistMessages=Y");
+                        } else {
+                            initiatorOut.write("\n" + "PersistMessages=N");
+                        }
+
+                        if(ResetOnLogout) {
+                            initiatorOut.write("\n" + "ResetOnLogout=Y");
+                        } else {
+                            initiatorOut.write("\n" + "ResetOnLogout=N");
+                        }
+
+                        if(ResetOnDisconnect) {
+                            initiatorOut.write("\n" + "ResetOnDisconnect=Y");
+                        } else {
+                            initiatorOut.write("\n" + "ResetOnDisconnect=N");
+                        }
+
+                        initiatorOut.write("\n");
                     }
 
 

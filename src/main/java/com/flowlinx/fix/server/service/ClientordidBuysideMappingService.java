@@ -28,6 +28,11 @@ public class ClientordidBuysideMappingService extends AbstractBaseService<Client
         return repo.findByClientOrderId( clientOrderId );
     }
 
+    public Optional<ClientordidBuysideMapping> findByMsgTypeAndMsgSeqNumAndSenderAndTargetAndFixVersion( String msgType, Long msgSeqNum, String sender, String target, String fixVersion ){
+        System.out.println("findByMsgTypeAndMsgSeqNumAndSenderAndTargetAndFixVersion......");
+        return repo.findByMsgTypeAndMsgSeqNumAndSenderAndTargetAndFixVersion( msgType, msgSeqNum, sender, target, fixVersion );
+    }
+
 //    @Override
 //    public Specification<RoutingTable> specificationByFilter(EntityFilter<RoutingTable> filter) {
 //        Specification<RoutingTable> spec = notNull("id");
@@ -59,6 +64,12 @@ public class ClientordidBuysideMappingService extends AbstractBaseService<Client
         Optional<ClientordidBuysideMapping> existingItem = findByClientOrderId(item.getClientOrderId());
         if (existingItem.isPresent()) {
             existingItem.get().setBuySideSession(item.getBuySideSession());
+            existingItem.get().setMessage(item.getMessage());
+            existingItem.get().setMsgType(item.getMsgType());
+            existingItem.get().setMsgSeqNum(item.getMsgSeqNum());
+            existingItem.get().setSender(item.getSender());
+            existingItem.get().setTarget(item.getTarget());
+            existingItem.get().setFixVersion(item.getFixVersion());
             return super.save(existingItem.get());
         } else {
             return super.save(item);
@@ -76,6 +87,12 @@ public class ClientordidBuysideMappingService extends AbstractBaseService<Client
 
         clientordidBuysideMapping.setClientOrderId( item.getClientOrderId() );
         clientordidBuysideMapping.setBuySideSession( item.getBuySideSession() );
+        clientordidBuysideMapping.setMessage( item.getMessage() );
+        clientordidBuysideMapping.setMsgType(item.getMsgType());
+        clientordidBuysideMapping.setMsgSeqNum(item.getMsgSeqNum());
+        clientordidBuysideMapping.setSender(item.getSender());
+        clientordidBuysideMapping.setTarget(item.getTarget());
+        clientordidBuysideMapping.setFixVersion(item.getFixVersion());
 
         return super.save( clientordidBuysideMapping );
     }

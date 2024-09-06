@@ -200,7 +200,7 @@ public class FixSessionExt {
     private String sessionStatus;
 
     @Column(name = "usedatadictionary")
-    private String useDataDictionary;
+    private Boolean useDataDictionary;
 
     @Column(name = "instance", length = 200)
     private String instance;

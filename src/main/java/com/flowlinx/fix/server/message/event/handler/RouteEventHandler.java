@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 import quickfix.DefaultMessageFactory;
 import quickfix.Message;
 import quickfix.Session;
+import quickfix.SessionID;
 import quickfix.field.*;
 import quickfix.fix42.Reject;
 
@@ -51,6 +52,51 @@ public class RouteEventHandler implements ApplicationListener<RouteEvent> {
     public void onApplicationEvent(RouteEvent event) {
 
         try{
+            Message message = event.getMessage();
+            final RoutingTable route = event.getRoutingTable();
+            final String senderCompID =  AppUtils.getString( message.getHeader(), SenderCompID.FIELD );
+            final String targetCompID =  AppUtils.getString( message.getHeader(), TargetCompID.FIELD );
+
+            Session session = Session.lookupSession(new SessionID(
+                    message.getHeader().getString(BeginString.FIELD),
+                    route.getSenderCompID(),
+                    route.getTargetCompID()
+            ));
+
+            if (session == null || !session.isEnabled() || !session.isLoggedOn()) {
+                System.out.println(session == null ? "Session not found." : "The session is not heartbeating.");
+
+                final String server = route.getSenderCompID();
+
+                Message rejectionReport = messageFactory.create(message.getHeader().getString(BeginString.FIELD), MsgType.EXECUTION_REPORT);
+                rejectionReport.getHeader().setField(new SenderCompID(message.getHeader().getString(49)));
+                rejectionReport.getHeader().setField(new TargetCompID(message.getHeader().getString(56)));
+                rejectionReport.getHeader().setField(new SendingTime(new Timestamp(System.currentTimeMillis()).toLocalDateTime()));
+                rejectionReport.getHeader().setField(new MsgSeqNum(message.getHeader().getInt(34) + 1));
+
+                rejectionReport.setField(new ClOrdID(message.getString(11)));
+                rejectionReport.setField(new ExecID("E" + message.getString(11)));
+                rejectionReport.setField(new OrdStatus(OrdStatus.REJECTED));
+                rejectionReport.setField(new Text(StringUtils.replace( route.getTargetCompID() + "-" + message.getHeader().getString(BeginString.FIELD) + " session is currently down", " ", "_" )));
+                rejectionReport.setField(new LastShares());
+                rejectionReport.setField(new Side(message.getChar(54)));
+                rejectionReport.setField(new Symbol(message.getString(55)));
+                rejectionReport.setField(new ExecType(ExecType.REJECTED));
+                rejectionReport.setField(new OrderID("O" + message.getString(11)));
+                if(!message.getHeader().getString(BeginString.FIELD).contains("4.4"))
+                    rejectionReport.setField(new ExecTransType(ExecTransType.NEW));
+                rejectionReport.setField(new OrderQty(message.getInt(38)));
+                rejectionReport.setField(new LeavesQty(message.getInt(38)));
+                rejectionReport.setField(new AvgPx());
+                rejectionReport.setField(new CumQty());
+
+                Session.sendToTarget( rejectionReport, targetCompID, senderCompID );
+                return;
+            } else {
+                System.out.println("The session is heartbeating.");
+            }
+
+            
             List<Map<String, Object>> rules;
             try {
                 rules = ruleService.getAllRules();
@@ -58,10 +104,9 @@ public class RouteEventHandler implements ApplicationListener<RouteEvent> {
                 e.printStackTrace();
             }
 
-            Message message = event.getMessage();
-            final RoutingTable route = event.getRoutingTable();
 
-            final String senderCompID =  AppUtils.getString( message.getHeader(), SenderCompID.FIELD );
+
+
 //            message.getHeader().setField( new OnBehalfOfCompID( senderCompID ) );
 
             System.out.println("---------------MESSAGE---------------\n" + message);

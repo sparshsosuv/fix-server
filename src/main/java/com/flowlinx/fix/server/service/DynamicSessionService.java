@@ -5,7 +5,9 @@ import com.flowlinx.fix.server.domain.FixSessionExt;
 import com.flowlinx.fix.server.repository.DynamicSessionRepository;
 import com.flowlinx.fix.server.repository.FixSessionExtRepository;
 import com.flowlinx.fix.server.resource.representation.CreateSessionRepresentation;
+import com.flowlinx.fix.server.resource.representation.DeleteSessionRepresentation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.connect.health.ConnectorType;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,9 +33,6 @@ import static quickfix.SessionSettings.*;
 public class DynamicSessionService {
 
     @Autowired
-    private ThreadedSocketAcceptor socketAcceptor;
-
-    @Autowired
     private Mapper mapper;
 
     @Autowired
@@ -45,8 +44,18 @@ public class DynamicSessionService {
     @Autowired
     private FixSessionExtRepository fixSessionExtRepository;
 
-    @Autowired
+    @Autowired(required = false)
+    private ThreadedSocketAcceptor socketAcceptor;
+
+    @Autowired(required = false)
     private ThreadedSocketInitiator socketInitiator;
+
+//    @Autowired(required = false)
+//    private ThreadedSocketAcceptor socketAcceptor;
+//
+//    @Autowired(required = false)
+//    private ThreadedSocketInitiator socketInitiator;
+
 
     public void create( CreateSessionRepresentation item ) {
         final DynamicSession session = mapper.map( item, DynamicSession.class );
@@ -54,6 +63,39 @@ public class DynamicSessionService {
         repository.save( session );
 
         addDynamicSessions( Arrays.asList( item ), true );
+    }
+
+    public void update( CreateSessionRepresentation item ) {
+        final DynamicSession session = mapper.map( item, DynamicSession.class );
+
+        DeleteSessionRepresentation deleteItem = new DeleteSessionRepresentation();
+
+        String[] parts = item.getId().split(":", 2);
+        String beginString = parts[0];
+        String rest = parts[1];
+
+        int lastDotIndex = rest.lastIndexOf('.');
+
+        String senderCompId = rest.substring(0, lastDotIndex);
+        String targetCompId = rest.substring(lastDotIndex + 1);
+
+        deleteItem.setBeginString(beginString);
+        deleteItem.setSenderCompID(senderCompId);
+        deleteItem.setTargetCompID(targetCompId);
+
+        delete(deleteItem);
+        repository.save( session );
+
+        addDynamicSessions( Arrays.asList( item ), true );
+    }
+
+    public void delete( DeleteSessionRepresentation item ) {
+        final DynamicSession session = mapper.map( item, DynamicSession.class );
+
+        repository.delete( session );
+
+        removeDynamicSessions(item);
+//        addDynamicSessions( Arrays.asList( item ), true );
 
     }
 
@@ -62,6 +104,34 @@ public class DynamicSessionService {
 
         return dynamicSessions.stream().map(session -> mapper.map(
                 session, CreateSessionRepresentation.class)).collect(Collectors.toList());
+    }
+
+    public void removeDynamicSessions(DeleteSessionRepresentation item) {
+        SessionID sessionID = new SessionID(
+                new BeginString(item.getBeginString()),
+                new SenderCompID(item.getSenderCompID()),
+                new TargetCompID(item.getTargetCompID())
+        );
+
+        String connectionType = (item.getConnectionType() != null) ? item.getConnectionType().trim().toLowerCase() : "";
+
+        if (connectionType.isEmpty() || connectionType.equals("acceptor")) {
+            try {
+                socketAcceptor.removeDynamicSession(sessionID);
+            } catch (Exception e) {
+                // Log the exception or handle it appropriately
+                e.printStackTrace();
+            }
+        }
+
+        if (connectionType.isEmpty() || !connectionType.equals("acceptor")) {
+            try {
+                socketInitiator.removeDynamicSession(sessionID);
+            } catch (Exception e) {
+                // Log the exception or handle it appropriately
+                e.printStackTrace();
+            }
+        }
     }
 
     public void addDynamicSessions(List<CreateSessionRepresentation> sessionsRepresentation, boolean restartSocketAcceptor)  {
@@ -73,7 +143,7 @@ public class DynamicSessionService {
                         new TargetCompID(sessionRepresentation.getTargetCompID()));
 
                 Dictionary dictionary = new Dictionary();
-                dictionary.setString("ConnectionType", sessionRepresentation.getConnectionType());
+                dictionary.setString("ConnectionType", sessionRepresentation.getConnectionType().toLowerCase());
                 dictionary.setString("StartTime", sessionRepresentation.getStartTime());
                 dictionary.setString("EndTime", sessionRepresentation.getEndTime());
                 dictionary.setString("HeartBtInt", sessionRepresentation.getHeartBtInt());
@@ -85,22 +155,39 @@ public class DynamicSessionService {
                 dictionary.setString("ValidateFieldsHaveValue", sessionRepresentation.getValidateFieldsHaveValue());
                 dictionary.setString("PersistMessages", sessionRepresentation.getPersistMessages());
                 dictionary.setString("BeginString", sessionRepresentation.getBeginString());
-                dictionary.setString("SocketAcceptPort", sessionRepresentation.getSocketAcceptPort());
+                if (sessionRepresentation.getConnectionType().toLowerCase().equals("acceptor"))
+                    dictionary.setString("SocketAcceptPort", sessionRepresentation.getSocketAcceptPort());
+                if (sessionRepresentation.getConnectionType().toLowerCase().equals("initiator")) {
+                    dictionary.setString("SocketConnectPort", sessionRepresentation.getSocketConnectPort());
+                    dictionary.setString("SocketConnectHost", sessionRepresentation.getSocketConnectHost());
+                }
                 dictionary.setString("SenderCompID", sessionRepresentation.getSenderCompID());
                 dictionary.setString("TargetCompID", sessionRepresentation.getTargetCompID());
                 dictionary.setString("ResetOnDisconnect", sessionRepresentation.getResetOnDisconnect());
                 dictionary.setString("ResetOnLogout", sessionRepresentation.getResetOnLogout());
 
-                socketAcceptor.getSettings().set(sessionID, dictionary);
+                if (sessionRepresentation.getConnectionType().toLowerCase().equals("acceptor"))
+                    socketAcceptor.getSettings().set(sessionID, dictionary);
+                else
+                    socketInitiator.getSettings().set(sessionID, dictionary);
 
                 final SessionSettings settings = new SessionSettings();
-                copySettings(settings, socketAcceptor.getSettings().getDefaultProperties());
+                if (sessionRepresentation.getConnectionType().toLowerCase().equals("acceptor"))
+                    copySettings(settings, socketAcceptor.getSettings().getDefaultProperties());
+                else
+                    copySettings(settings, socketInitiator.getSettings().getDefaultProperties());
+
                 settings.setString(BEGINSTRING, sessionRepresentation.getBeginString());
                 settings.setString(SENDERCOMPID, sessionRepresentation.getSenderCompID());
                 settings.setString(TARGETCOMPID, sessionRepresentation.getTargetCompID());
+                if (sessionRepresentation.getConnectionType().toLowerCase().equals("initiator"))
+                    settings.setString("ConnectionType", sessionRepresentation.getConnectionType().toLowerCase());
 
                 final Session session = sessionFactory.create(sessionID, settings);
-                socketAcceptor.addDynamicSession( session );
+                if (sessionRepresentation.getConnectionType().toLowerCase().equals("acceptor"))
+                    socketAcceptor.addDynamicSession( session );
+                else
+                    socketInitiator.addDynamicSession( session );
             }
 
             log.info("Dynamic sessions added successfully");

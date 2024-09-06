@@ -28,4 +28,6 @@ public class CreateSessionRepresentation {
     private String dataDictionary;
 
     private String socketAcceptPort;
+
+    private String id;
 }

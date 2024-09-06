@@ -1,10 +1,12 @@
 package com.flowlinx.fix.server.fix;
 
 import com.flowlinx.fix.server.DB;
+import com.flowlinx.fix.server.domain.ClientordidBuysideMapping;
 import com.flowlinx.fix.server.domain.FixSessionExt;
 import com.flowlinx.fix.server.repository.FixSessionExtRepository;
 import com.flowlinx.fix.server.representation.FixSessionRepresentation;
 import com.flowlinx.fix.server.resource.FixSessionResource;
+import com.flowlinx.fix.server.service.ClientordidBuysideMappingService;
 import com.flowlinx.fix.server.service.QueuedMessageProcessor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -12,13 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import quickfix.*;
-import quickfix.field.MsgType;
+import quickfix.field.*;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.time.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 
@@ -35,16 +39,46 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
     @Autowired
     private FixSessionExtRepository fixSessionExtRepository;
 
+    @Autowired
+    private ClientordidBuysideMappingService clientordidBuysideMappingService;
+
     private final Map<SessionID, Integer> sessionSeqNumMap = new HashMap<>();
 
     @Autowired
     private QueuedMessageProcessor queuedMessageProcessor;
 
+    @SneakyThrows
     @Override
     public void fromAdmin(Message message, SessionID sessionId)
             throws FieldNotFound, IncorrectDataFormat, IncorrectTagValue, RejectLogon {
 
         log.info("fromAdmin: Message={}, SessionId={}", message, sessionId);
+
+        if (message.getHeader().getString(MsgType.FIELD).equals("3")) {
+            Long msgSeqNum = (long) message.getInt(RefSeqNum.FIELD);
+            String sender = message.getHeader().getString(TargetCompID.FIELD);
+            String target = message.getHeader().getString(SenderCompID.FIELD);
+            String msgType = message.getString(RefMsgType.FIELD);
+            String fixVersion = message.getHeader().getString(BeginString.FIELD);
+            System.out.println("===============");
+            System.out.println(msgSeqNum);
+            System.out.println(sender);
+            System.out.println(target);
+            System.out.println(msgType);
+            System.out.println(fixVersion);
+            System.out.println("===============\n");
+            Optional<ClientordidBuysideMapping> opt = clientordidBuysideMappingService.findByMsgTypeAndMsgSeqNumAndSenderAndTargetAndFixVersion(msgType, msgSeqNum, sender, target, fixVersion);
+            System.out.println("opt: " + opt);
+            if (opt.isPresent()) {
+                String buySideSession = opt.get().getBuySideSession();
+                String buySideSender = buySideSession.substring(buySideSession.indexOf('.') + 1, buySideSession.length());
+                String buySideReceiver = buySideSession.substring(0, buySideSession.indexOf('.'));
+                System.out.println(buySideSender + " " + buySideReceiver);
+                message.setString(Text.FIELD, message.getString(Text.FIELD) + "_BrokerReject");
+                Session.sendToTarget(message, buySideSender, buySideReceiver);
+            }
+        }
+
 
 //        String sId = sessionId.toString().split(":")[1].replace("->", ".");
 //        String fixVersion = sessionId.toString().split(":")[0];
@@ -60,15 +94,36 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
     @Override
     public void fromApp(Message message, SessionID sessionId)
             throws FieldNotFound, IncorrectTagValue, UnsupportedMessageType {
-        log.info("fromApp: message.getClass " + message + " " + message.getClass());
-        log.info("<<<<<<<<<<<<<<<<<------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.." );
+//        if (message.getHeader().getField(new MsgType()).getValue().equals("S")) {
+            log.info("fromApp: " + System.nanoTime() + " " + message);
+            log.info("<<<<<<<<<<<<<<<<<------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.." );
+//        }
         crack( message, sessionId );
-        log.info("<<<<<<<<<<<<<<<<<------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.." );
+//        if (message.getHeader().getField(new MsgType()).getValue().equals("S")) {
+            log.info("<<<<<<<<<<<<<<<<<------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..");
+//        }
     }
 
+    @SneakyThrows
     @Override
     public void toApp(Message message, SessionID sessionId) throws DoNotSend {
-        log.info("toApp: Message={}, SessionId={}", message, sessionId);
+//        if (message.getHeader().getField(new MsgType()).getValue().equals("S")) {
+        Optional<ClientordidBuysideMapping> opt = clientordidBuysideMappingService.findByClientOrderId(message.getString(ClOrdID.FIELD));
+        if (opt.isPresent()) {
+            ClientordidBuysideMapping item = opt.get();
+            System.out.println("--------------------\n" + item);
+            System.out.println(message.toString());
+            item.setMessage(message.toString());
+            item.setMsgType(message.getHeader().getString(MsgType.FIELD));
+            item.setMsgSeqNum((long) message.getHeader().getInt(MsgSeqNum.FIELD));
+            item.setSender(message.getHeader().getString(SenderCompID.FIELD));
+            item.setTarget(message.getHeader().getString(TargetCompID.FIELD));
+            item.setFixVersion(message.getHeader().getString(BeginString.FIELD));
+            System.out.println("--------------------\n" + item + "--------------------\n");
+            clientordidBuysideMappingService.save(item);
+        }
+            log.info("toApp: {} Message={}, SessionId={}", System.nanoTime(), message, sessionId);
+//        }
     }
 
     @Override
@@ -269,6 +324,11 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
     }
 
     @Handler
+    public void multilegOrderCancelReplaceRequest(quickfix.fix44.MultilegOrderCancelReplaceRequest message, SessionID sessionID) {
+        router.route( message, sessionID );
+    }
+
+    @Handler
     public void quoteRequestOrder(quickfix.fix44.QuoteRequest message, SessionID sessionID) {
         router.route( message, sessionID );
     }
@@ -330,3 +390,5 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
         }
     }
 }
+
+//32540506818434 - 32538900464028

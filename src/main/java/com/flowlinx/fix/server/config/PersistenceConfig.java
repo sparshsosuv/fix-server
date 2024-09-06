@@ -1,5 +1,6 @@
 package com.flowlinx.fix.server.config;
 
+import com.flowlinx.fix.server.service.AwsSecretsManagerService;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.flywaydb.core.Flyway;
 import org.hibernate.cfg.Environment;
@@ -18,8 +19,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.util.Map;
 import java.util.Properties;
 
 @Configuration
@@ -33,15 +36,22 @@ public class PersistenceConfig {
     @Value("${datasource.driver}")
     private String driver;
     
-    @Value("${datasource.url}")
+//    @Value("${datasource.url}")
+//    private String url;
+//
+//    @Value("${datasource.username}")
+//    private String username;
+//
+//    @Value("${datasource.password}")
+//    private String password;
+
     private String url;
-    
-    @Value("${datasource.username}")
+
     private String username;
-    
-    @Value("${datasource.password}")
+
     private String password;
-    
+
+
     @Value("${datasource.hbm2ddlAuto}")
     private String hbm2ddlAuto;
     
@@ -66,6 +76,16 @@ public class PersistenceConfig {
     @Value("${flyway.migration.table}")
     private String migrationTable;
 
+    @Autowired
+    private AwsSecretsManagerService awsSecretsManagerService;
+
+    @PostConstruct
+    private void init() {
+        Map<String, String> secret = awsSecretsManagerService.getSecret();
+        this.url = "jdbc:postgresql://" + secret.get("host") + ":" + secret.get("port") + "/" + secret.get("dbname") + "?socketTimeout=30";
+        this.username = secret.get("username");
+        this.password = secret.get("password");
+    }
 
     @Bean
     public DataSource dataSource() {

@@ -22,4 +22,21 @@ public class ClientordidBuysideMapping implements Serializable {
     @Column(name = "buy_side_session")
     private String buySideSession;
 
+    @Column(name = "message")
+    private String message;
+
+    @Column(name = "msg_type")
+    private String msgType;
+
+    @Column(name = "msg_seq_num")
+    private Long msgSeqNum;
+
+    @Column(name = "sender")
+    private String sender;
+
+    @Column(name = "target")
+    private String target;
+
+    @Column(name = "fix_version")
+    private String fixVersion;
 }

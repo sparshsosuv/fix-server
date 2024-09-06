@@ -50,8 +50,8 @@ public class FixSessionBuilder {
         item.setSocketAcceptPort( getIntValue( prop,  Acceptor.SETTING_SOCKET_ACCEPT_PORT ) );
         item.setSocketConnectHost( getStrValue( prop, Initiator.SETTING_SOCKET_CONNECT_HOST ) );
         item.setSocketAcceptPort( getIntValue( prop,  Initiator.SETTING_SOCKET_CONNECT_PORT ) );
-        item.setNormalization(prop.getProperty("Normalization").equals("Y"));
-        item.setNormalizationClientIds(prop.getProperty("NormalizationClientIds"));
+        item.setNormalization(prop.getProperty("Normalization") == null ? false : prop.getProperty("Normalization").equals("Y"));
+        item.setNormalizationClientIds(prop.getProperty("Normalization") == null ? "" : prop.getProperty("NormalizationClientIds"));
 
         return item;
     }

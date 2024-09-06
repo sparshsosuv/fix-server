@@ -6,6 +6,7 @@ import com.flowlinx.fix.server.domain.Rule;
 import com.flowlinx.fix.server.fix.FixSessionBuilder;
 import com.flowlinx.fix.server.representation.FixSessionIdRepresentation;
 import com.flowlinx.fix.server.representation.FixSessionRepresentation;
+import com.flowlinx.fix.server.utils.AppConstants;
 import com.flowlinx.fix.server.utils.FixConstants;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class FixSessionResource {
     @Autowired
     private ThreadedSocketAcceptor acceptor;
 
-    @Autowired
+    @Autowired(required = false)
     private ThreadedSocketInitiator initiator;
 
     @Autowired

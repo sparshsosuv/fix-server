@@ -30,10 +30,10 @@ public class ClientEventHandler implements ApplicationListener<ClientEvent> {
     @Autowired
     private ClientordidBuysideMappingService clientordidBuysideMappingService;
 
-    @Autowired
+    @Autowired(required = false)
     private ThreadedSocketAcceptor acceptor;
 
-    @Autowired
+    @Autowired(required = false)
     private ThreadedSocketInitiator initiator;
 
     @Autowired
@@ -65,7 +65,6 @@ public class ClientEventHandler implements ApplicationListener<ClientEvent> {
                 boolean isMsgTypeS = message.getHeader().getField(new MsgType()).getValue().equals("S");
                 boolean isMsgTypeR = message.getHeader().getField(new MsgType()).getValue().equals("R");
                 String clientOrderId = isMsgTypeS ? message.getString(131) : message.getString(11);
-
 
                 if (opt.isPresent()) {
                     System.out.println("-----Normalization check-----");
