@@ -79,6 +79,6 @@ public class RuleService {
     private void writeJsonToFile(List<Map<String, Object>> rulesList) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT); // To pretty-print the JSON
-        objectMapper.writeValue(new File("/opt/sosuv/repositories/flowlinx-fix-server/src/main/resources/newRules.json"), rulesList);
+        objectMapper.writeValue(new File("/opt/sosuv/repositories/sosuv-fix-server/src/main/resources/newRules.json"), rulesList);
     }
 }

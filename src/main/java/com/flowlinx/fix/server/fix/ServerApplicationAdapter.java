@@ -94,6 +94,11 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
     @Override
     public void fromApp(Message message, SessionID sessionId)
             throws FieldNotFound, IncorrectTagValue, UnsupportedMessageType {
+        if(message.toString().contains("Unsupported Message Type\u0001372=j")) {
+            log.info("fromApp: " + System.nanoTime() + " " + message);
+            log.info("<<<<<<<<<<<<<<<<<------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.." );
+            return;
+        }
 //        if (message.getHeader().getField(new MsgType()).getValue().equals("S")) {
             log.info("fromApp: " + System.nanoTime() + " " + message);
             log.info("<<<<<<<<<<<<<<<<<------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.." );
@@ -216,7 +221,7 @@ public class ServerApplicationAdapter extends MessageCracker implements Applicat
         System.out.println(":::SESSION::::::: "+ fixSessionExt.getSessionId() + " " + fixSessionExt.getFixVersion() + " " + fixSessionExt.getSessionStatus());
 
 
-        queuedMessageProcessor.processQueuedMessages();
+        queuedMessageProcessor.processQueuedMessages(targetCompId);
 
     }
 

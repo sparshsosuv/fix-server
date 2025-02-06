@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.connect.health.ConnectorType;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import quickfix.*;
@@ -56,13 +57,35 @@ public class DynamicSessionService {
 //    @Autowired(required = false)
 //    private ThreadedSocketInitiator socketInitiator;
 
+    @Autowired
+    private SessionSettings serverSessionSettings;
+
+    @Autowired
+    private SessionSettings clientSessionSettings;
+
 
     public void create( CreateSessionRepresentation item ) {
         final DynamicSession session = mapper.map( item, DynamicSession.class );
 
-        repository.save( session );
+//        repository.save( session );
 
         addDynamicSessions( Arrays.asList( item ), true );
+
+        SessionID sessionID = new SessionID(new BeginString(item.getBeginString()),
+                new SenderCompID(item.getSenderCompID()),
+                new TargetCompID(item.getTargetCompID()));
+
+        try {
+            if (item.getConnectionType().toLowerCase().equals("acceptor")) {
+                socketAcceptor.start();
+            }
+            else if (item.getConnectionType().toLowerCase().equals("initiator"))
+                socketInitiator.start();
+        } catch ( Exception e ) {
+            e.printStackTrace();
+            log.error( String.format("Error on creating fix session (socketAcceptor/socketInitiator): %s", e.getMessage()));
+        }
+
     }
 
     public void update( CreateSessionRepresentation item ) {
@@ -84,15 +107,18 @@ public class DynamicSessionService {
         deleteItem.setTargetCompID(targetCompId);
 
         delete(deleteItem);
-        repository.save( session );
+//        repository.save( session );
 
         addDynamicSessions( Arrays.asList( item ), true );
     }
 
     public void delete( DeleteSessionRepresentation item ) {
+        log.info("Deleting session: " + item);
+        log.info("Details: " + item.getBeginString() + " " + item.getConnectionType() + " " + item.getTargetCompID());
+
         final DynamicSession session = mapper.map( item, DynamicSession.class );
 
-        repository.delete( session );
+//        repository.delete( session );
 
         removeDynamicSessions(item);
 //        addDynamicSessions( Arrays.asList( item ), true );
@@ -118,18 +144,45 @@ public class DynamicSessionService {
         if (connectionType.isEmpty() || connectionType.equals("acceptor")) {
             try {
                 socketAcceptor.removeDynamicSession(sessionID);
+//                serverSessionSettings.removeSetting(sessionID, "ConnectionType");
+//                serverSessionSettings.removeSetting(sessionID, "StartTime");
+//                serverSessionSettings.removeSetting(sessionID, "EndTime");
+//                serverSessionSettings.removeSetting(sessionID, "HeartBtInt");
+//                serverSessionSettings.removeSetting(sessionID, "ValidOrderTypes");
+//                serverSessionSettings.removeSetting(sessionID, "UseDataDictionary");
+//                serverSessionSettings.removeSetting(sessionID, "DefaultMarketPrice");
+//                serverSessionSettings.removeSetting(sessionID, "ValidateUserDefinedFields");
+//                serverSessionSettings.removeSetting(sessionID, "PersistMessages");
+//                serverSessionSettings.removeSetting(sessionID, "BeginString");
+//                serverSessionSettings.removeSetting(sessionID, "SocketAcceptPort");
+//                System.out.println("serverSessionSettings.getSessionProperties(sessionID): " + serverSessionSettings.getSessionProperties(sessionID));
+//                serverSessionSettings.getSessionProperties(sessionID).remove(sessionID);
+//                for (Map.Entry<Object, Object> entry : serverSessionSettings.getSessionProperties(sessionID)) {
+//                    Object key = entry.getKey();
+//                    Object value = entry.getValue();
+//
+//                    // Process key and value here
+//                    System.out.println("Key: " + key + ", Value: " + value);
+//                    serverSessionSettings.getSessionProperties(sessionID, key);
+//                }
+
+                socketAcceptor.start();
             } catch (Exception e) {
                 // Log the exception or handle it appropriately
                 e.printStackTrace();
+                log.error( String.format( "Error on removing fix session (socketAcceptor/socketInitiator): %s", e.getMessage()));
             }
         }
 
         if (connectionType.isEmpty() || !connectionType.equals("acceptor")) {
             try {
                 socketInitiator.removeDynamicSession(sessionID);
+                socketInitiator.start();
             } catch (Exception e) {
                 // Log the exception or handle it appropriately
                 e.printStackTrace();
+                log.error( String.format( "Error on removing fix session (socketAcceptor/socketInitiator): %s", e.getMessage()));
+
             }
         }
     }
@@ -188,6 +241,7 @@ public class DynamicSessionService {
                     socketAcceptor.addDynamicSession( session );
                 else
                     socketInitiator.addDynamicSession( session );
+//                socketAcceptor.start();
             }
 
             log.info("Dynamic sessions added successfully");

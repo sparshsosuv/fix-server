@@ -82,14 +82,14 @@ public class NormalizationService {
             int tagValueStartIndex = fixString.indexOf('=', fixString.indexOf(String.valueOf(tag) + '=')) + 1;
             int tagValueEndIndex = fixString.indexOf('\u0001', fixString.indexOf(String.valueOf(tag) + '='));
             updatedFixString = fixString.substring(0, tagValueStartIndex) + value + fixString.substring(tagValueEndIndex);
-            return new Message(updatedFixString, new DataDictionary("/opt/sosuv/repositories/flowlinx-fix-server/src/main/resources/fix/FIX44.xml"), false);
+            return new Message(updatedFixString, new DataDictionary("/opt/sosuv/repositories/sosuv-fix-server/src/main/resources/fix/FIX44.xml"), false);
         } else {
             int tag10Index = fixString.indexOf("10=");
             String newTagString = tag + "=" + value + '\u0001';
             if (tag10Index == -1) {
-                return new Message(fixString + newTagString, new DataDictionary("/opt/sosuv/repositories/flowlinx-fix-server/src/main/resources/fix/FIX44.xml"), false);
+                return new Message(fixString + newTagString, new DataDictionary("/opt/sosuv/repositories/sosuv-fix-server/src/main/resources/fix/FIX44.xml"), false);
             }
-            return new Message(fixString.substring(0, tag10Index) + newTagString + fixString.substring(tag10Index), new DataDictionary("/opt/sosuv/repositories/flowlinx-fix-server/src/main/resources/fix/FIX44.xml"), false);
+            return new Message(fixString.substring(0, tag10Index) + newTagString + fixString.substring(tag10Index), new DataDictionary("/opt/sosuv/repositories/sosuv-fix-server/src/main/resources/fix/FIX44.xml"), false);
         }
     }
 

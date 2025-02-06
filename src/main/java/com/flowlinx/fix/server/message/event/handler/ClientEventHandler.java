@@ -160,6 +160,7 @@ public class ClientEventHandler implements ApplicationListener<ClientEvent> {
                     if (isBuySideUp(buySideSessionId)) {
                         Session.sendToTarget(message, sender, receiver);
                     } else {
+                        log.info("The BUYSIDE " + buySideSessionId + " is down");
                         queueMessage(clientOrderId, message, sender, receiver);
                     }
                 } else {
@@ -174,6 +175,11 @@ public class ClientEventHandler implements ApplicationListener<ClientEvent> {
     }
 
     private boolean isBuySideUp(SessionID sessionID) throws FieldNotFound {
+        System.out.println("BUYSIDE: " + sessionID);
+        System.out.println("Session.lookupSession(sessionID): " + Session.lookupSession(sessionID));
+        System.out.println("Session.lookupSession(sessionID).isLoggedOn(): " + Session.lookupSession(sessionID).isLoggedOn());
+        System.out.println("Session.lookupSession(sessionID).isEnabled(): " + Session.lookupSession(sessionID).isEnabled());
+
         return Session.lookupSession(sessionID) != null && Session.lookupSession(sessionID).isLoggedOn();
     }
 

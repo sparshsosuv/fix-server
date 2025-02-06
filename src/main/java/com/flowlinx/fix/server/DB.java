@@ -277,21 +277,21 @@ public class DB {
 
         try {
             Files.deleteIfExists(
-                    Paths.get("/opt/sosuv/repositories/flowlinx-fix-server/src/main/resources/fix/fix-acceptor.cfg"));
+                    Paths.get("/opt/sosuv/repositories/sosuv-fix-server/src/main/resources/fix/fix-acceptor.cfg"));
             Files.deleteIfExists(
-                    Paths.get("/opt/sosuv/repositories/flowlinx-fix-server/src/main/resources/fix/fix-initiator.cfg"));
+                    Paths.get("/opt/sosuv/repositories/sosuv-fix-server/src/main/resources/fix/fix-initiator.cfg"));
             System.out.println("Deletion successful.");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        File acceptorFile = new File("/opt/sosuv/repositories/flowlinx-fix-server/src/main/resources/fix/fix-acceptor.cfg");
+        File acceptorFile = new File("/opt/sosuv/repositories/sosuv-fix-server/src/main/resources/fix/fix-acceptor.cfg");
         FileWriter acceptorFw = new FileWriter(acceptorFile,true);
 
         BufferedWriter acceptorOut = new BufferedWriter(acceptorFw);
 
-        File initiatorFile = new File("/opt/sosuv/repositories/flowlinx-fix-server/src/main/resources/fix/fix-initiator.cfg");
+        File initiatorFile = new File("/opt/sosuv/repositories/sosuv-fix-server/src/main/resources/fix/fix-initiator.cfg");
         FileWriter initiatorFw = new FileWriter(initiatorFile,true);
 
         BufferedWriter initiatorOut = new BufferedWriter(initiatorFw);
@@ -378,7 +378,7 @@ public class DB {
                 String HeartBtInt = rs.getString("heartbeatinterval");
                 String appicationType = rs.getString("applicationtype");
                 String firmname = rs.getString("firmname");
-                String DataDictionary = "/opt/sosuv/repositories/flowlinx-fix-server/src/main/resources/fix/" + rs.getString("datadictionary");
+                String DataDictionary = "/opt/sosuv/repositories/sosuv-fix-server/src/main/resources/fix/" + rs.getString("datadictionary");
                 Boolean Normalization = rs.getBoolean("normalization");
                 String NormalizationClients = rs.getString("normalization_clients");
                 Boolean UseDataDictionary = rs.getBoolean("usedatadictionary");

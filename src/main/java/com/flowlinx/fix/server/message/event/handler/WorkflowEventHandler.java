@@ -48,14 +48,15 @@ public class WorkflowEventHandler implements ApplicationListener<WorkflowEvent> 
                                 server,
                                 FLX_WORKFLOW
             ));
-            System.out.println(session.isEnabled());
-            System.out.println(session.isLoggedOn());
+            log.info("{}, {}", session, session.isEnabled());
+            log.info("{}", session.isLoggedOn());
 
             if (session == null || !session.isEnabled() || !session.isLoggedOn()) {
-                System.out.println("Bad sesssion...");
+                log.info("Bad sesssion...");
             }
 
-                result = Session.sendToTarget( message, server, FLX_WORKFLOW );
+            log.info("Message: {}, Sender: {}, Receiver: {}", message, server, FLX_WORKFLOW);
+            result = Session.sendToTarget( message, server, FLX_WORKFLOW );
 
             if(!result){
 

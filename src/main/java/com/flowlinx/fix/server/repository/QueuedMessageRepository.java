@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface QueuedMessageRepository extends JpaRepository<QueuedMessage, Long> {
     List<QueuedMessage> findByProcessedFalse();
+    List<QueuedMessage> findByProcessedFalseAndReceiver(String receiver);
 }
