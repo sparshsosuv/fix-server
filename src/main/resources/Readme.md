@@ -11,13 +11,13 @@ It handles fix connectivity.
    CREATE DATABASE quickfix;
 2. UPDATE USER AND PASSWORD.
    2.1 FILE: resources/applications.properties
-      datasource.url=jdbc:postgresql://localhost:5432/quickfix?socketTimeout=30
+      datasource.url=jdbc:postgresql://10.10.8.79:5432/quickfix?socketTimeout=30
       datasource.username=postgres
       datasource.password=postgres
 3. FIX DATABASE INTEGRATION
    3.1. FILE: resources/fix/quickfixj-server-uat.cfg
    JdbcDriver=org.postgresql.Driver
-   JdbcURL=jdbc:postgresql://localhost:5432/quickfix?socketTimeout=30
+   JdbcURL=jdbc:postgresql://10.10.8.79:5432/quickfix?socketTimeout=30
    JdbcUser=postgres
    JdbcPassword=postgres
 

@@ -1,6 +1,6 @@
 #!/bin/bash
-JARFile="/opt/sosuv/apps/sosuv-fix-server/target/flowlinx-fix-server.jar"
-PIDFile="/opt/sosuv/pid/flowlinx-fix-server.pid"
+JARFile="/Users/Sparsh Shukla/Documents/repos_BE/apps/sosuv-fix-server/target/flowlinx-fix-server.jar"
+PIDFile="/Users/Sparsh Shukla/Documents/repos_BE/pid/flowlinx-fix-server.pid"
 JVM_OPTS="-Xdebug -Xmx2g -Dspring.profiles.active=uat"
 SPRING_OPTS=""
 

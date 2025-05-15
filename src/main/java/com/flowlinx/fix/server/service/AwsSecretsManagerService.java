@@ -32,7 +32,7 @@ public class AwsSecretsManagerService {
         try {
             getSecretValueResponse = client.getSecretValue(getSecretValueRequest);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to retrieve secret from AWS Secrets Manager", e);
+            throw new RuntimeException("Failed to retrieve secret from AWS Secrets Manager" + e);
         }
 
         String secretString = getSecretValueResponse.secretString();

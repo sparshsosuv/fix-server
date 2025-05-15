@@ -15,7 +15,7 @@ public class DB {
     Connection connection= null;
 
     @Value("${datasource.url}")
-    static String jdbcURL = "jdbc:postgresql://localhost:5432/quickfix?socketTimeout=30";
+    static String jdbcURL = "jdbc:postgresql://10.10.8.79:5432/quickfix?socketTimeout=30";
 
     @Value("${datasource.username}")
     static String username = "postgres";
@@ -277,21 +277,21 @@ public class DB {
 
         try {
             Files.deleteIfExists(
-                    Paths.get("/opt/sosuv/repositories/sosuv-fix-server/src/main/resources/fix/fix-acceptor.cfg"));
+                    Paths.get("/Users/Sparsh Shukla/Documents/repos_BE/sosuv-fix-server/src/main/resources/fix/fix-acceptor.cfg"));
             Files.deleteIfExists(
-                    Paths.get("/opt/sosuv/repositories/sosuv-fix-server/src/main/resources/fix/fix-initiator.cfg"));
+                    Paths.get("/Users/Sparsh Shukla/Documents/repos_BE/sosuv-fix-server/src/main/resources/fix/fix-initiator.cfg"));
             System.out.println("Deletion successful.");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        File acceptorFile = new File("/opt/sosuv/repositories/sosuv-fix-server/src/main/resources/fix/fix-acceptor.cfg");
+        File acceptorFile = new File("/Users/Sparsh Shukla/Documents/repos_BE/sosuv-fix-server/src/main/resources/fix/fix-acceptor.cfg");
         FileWriter acceptorFw = new FileWriter(acceptorFile,true);
 
         BufferedWriter acceptorOut = new BufferedWriter(acceptorFw);
 
-        File initiatorFile = new File("/opt/sosuv/repositories/sosuv-fix-server/src/main/resources/fix/fix-initiator.cfg");
+        File initiatorFile = new File("/Users/Sparsh Shukla/Documents/repos_BE/sosuv-fix-server/src/main/resources/fix/fix-initiator.cfg");
         FileWriter initiatorFw = new FileWriter(initiatorFile,true);
 
         BufferedWriter initiatorOut = new BufferedWriter(initiatorFw);
@@ -312,7 +312,7 @@ public class DB {
                 "PersistMessages=Y\n\n";
         defaultAcceptorConfig += "#Storage and logging\n" +
                 "JdbcDriver=org.postgresql.Driver\n" +
-                "JdbcURL=jdbc:postgresql://localhost:5432/quickfix?socketTimeout=30\n" +
+                "JdbcURL=jdbc:postgresql://10.10.8.79:5432/quickfix?socketTimeout=30\n" +
                 "JdbcUser=postgres\n" +
                 "JdbcPassword=postgres\n" +
                 "JdbcLogHeartBeats=N\n" +
@@ -342,7 +342,7 @@ public class DB {
 
         defaultInitiatorConfig += "#Storage and logging\n" +
                 "JdbcDriver=org.postgresql.Driver\n" +
-                "JdbcURL=jdbc:postgresql://localhost:5432/quickfix?socketTimeout=30\n" +
+                "JdbcURL=jdbc:postgresql://10.10.8.79:5432/quickfix?socketTimeout=30\n" +
                 "JdbcUser=postgres\n" +
                 "JdbcPassword=postgres\n" +
                 "JdbcLogHeartBeats=N\n" +
@@ -378,7 +378,7 @@ public class DB {
                 String HeartBtInt = rs.getString("heartbeatinterval");
                 String appicationType = rs.getString("applicationtype");
                 String firmname = rs.getString("firmname");
-                String DataDictionary = "/opt/sosuv/repositories/sosuv-fix-server/src/main/resources/fix/" + rs.getString("datadictionary");
+                String DataDictionary = "/Users/Sparsh Shukla/Documents/repos_BE/sosuv-fix-server/src/main/resources/fix/" + rs.getString("datadictionary");
                 Boolean Normalization = rs.getBoolean("normalization");
                 String NormalizationClients = rs.getString("normalization_clients");
                 Boolean UseDataDictionary = rs.getBoolean("usedatadictionary");
@@ -427,7 +427,7 @@ public class DB {
                         if(ConnectionType!=null && !ConnectionType.isEmpty())
                             acceptorOut.write("\n" + "ConnectionType=" + ConnectionType.toLowerCase());
                         acceptorOut.write("\n" + "Normalization=" + (Normalization ? "Y" : "N"));
-                        if(!NormalizationClients.isEmpty()) {
+                        if(NormalizationClients!= null && !NormalizationClients.isEmpty()) {
                             acceptorOut.write("\n" + "NormalizationClientIds=" + NormalizationClients);
                         }
                         acceptorOut.write("\n" + "SocketAcceptPort=" + port);
